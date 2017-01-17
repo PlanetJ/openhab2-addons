@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<thing:thing-descriptions bindingId="isy"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:thing="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0"
+        xsi:schemaLocation="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0 http://eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd">
+
+    <bridge-type id="isy">
+        <label>Universal Devices Inc. ISY</label>
+        <description>Insteon/ZWave controller</description>
+        <config-description>
+            <parameter name="username" type="text" required="true">
+                <label>Username</label>
+            </parameter>
+            <parameter name="password" type="text" required="true">
+                <label>Password</label>
+            </parameter>
+            <parameter name="baseUrl" type="text" required="true">
+                <label>Rest Base URL</label>
+                <description>The base url for the isy in the format http://ip:port</description>
+            </parameter>
+            <parameter name="refresh" type="integer" min="10">
+                <label>Refresh interval</label>
+                <description>Interval to refresh status of devices.</description>
+                <default>60</default>
+            </parameter>
+        </config-description>
+    </bridge-type>
+    
+    <thing-type id="dimmer"> 
+        <supported-bridge-type-refs>
+            <bridge-type-ref id="isy"/>
+        </supported-bridge-type-refs>
+        <label>Insteon Dimmer</label>
+        <description>Insteon Dimmer Switch</description>
+        <channels>
+            <channel typeId="brightness" id="brightness"/>
+        </channels>
+        <properties>
+            <property name="address">ISY Node Address</property>
+        </properties>
+    </thing-type>
+    
+    <thing-type id="switch">
+        <supported-bridge-type-refs>
+            <bridge-type-ref id="isy"/>
+        </supported-bridge-type-refs>
+        <label>Insteon Switch</label>
+        <description>Insteon Switchable Device (On/Off Relay)</description>
+        <channels>
+            <channel typeId="switch" id="switchState"></channel>
+        </channels>
+    </thing-type>
+    
+    <thing-type id="motionSensor">
+        <supported-bridge-type-refs>
+            <bridge-type-ref id="isy"/>
+        </supported-bridge-type-refs>
+        <label>Insteon Motion Sensor</label>
+        <description>Model 2842-222</description>
+        <channels>
+            <channel typeId="contact" id="motionState">
+                <label>Motion</label>
+            </channel>
+            <channel typeId="contact" id="duskDawn">
+                <label>Dusk</label>
+            </channel>
+            <channel typeId="contact" id="battery">
+                <label>Battery Low</label>
+            </channel>
+        </channels>
+    </thing-type>
+
+    <channel-type id="brightness">
+        <item-type>Dimmer</item-type>
+        <label>Brightness</label>
+        <category>DimmableLight</category>
+    </channel-type>
+
+    <channel-type id="switch">
+        <item-type>Switch</item-type>
+        <label>On/Off</label>
+        <category>Switch</category>
+    </channel-type>
+    
+    <channel-type id="contact">
+        <item-type>Contact</item-type>
+        <label>Open/Close</label>
+        <category>Contact</category>
+    </channel-type>
+    
+    
+
+</thing:thing-descriptions>
