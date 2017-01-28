@@ -63,11 +63,22 @@ public class ISYDeviceDiscovery extends AbstractDiscoveryService {
                 } else if (type == 2) {
                     // Switch types
                     logger.info("Found switch device {}", node.getAddress());
-                    thingTypeUID = ISYBindingConstants.THING_TYPE_SWITCH;
+                    if (device == 57) {
+                        thingTypeUID = ISYBindingConstants.THING_TYPE_OUTLET;
+                    } else {
+                        thingTypeUID = ISYBindingConstants.THING_TYPE_SWITCH;
+                    }
                 } else if (type == 16) {
                     if (device == 1) {
+                        logger.info("Found motion sensor {}", node.getAddress());
                         thingTypeUID = ISYBindingConstants.THING_TYPE_MOTION_SENSOR;
+                    } else if (device == 2) {
+                        logger.info("Found triggerlinc sensor {}", node.getAddress());
+                        thingTypeUID = ISYBindingConstants.THING_TYPE_CONTACT_SENSOR;
                     }
+                } else if (type == 7) {
+                    logger.info("Found contact sensor {}", node.getAddress());
+                    thingTypeUID = ISYBindingConstants.THING_TYPE_CONTACT_SENSOR;
                 }
 
                 if (thingTypeUID != null) {

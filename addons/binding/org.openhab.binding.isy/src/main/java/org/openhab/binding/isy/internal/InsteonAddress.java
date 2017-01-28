@@ -94,6 +94,11 @@ public class InsteonAddress {
         public String getAddress() {
             return address.toString() + " " + channel;
         }
+
+        @Override
+        public String toString() {
+            return getAddress();
+        }
     }
 
 }

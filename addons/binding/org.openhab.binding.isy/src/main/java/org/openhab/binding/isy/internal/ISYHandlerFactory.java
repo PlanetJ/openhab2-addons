@@ -24,6 +24,7 @@ import org.eclipse.smarthome.core.thing.ThingTypeUID;
 import org.eclipse.smarthome.core.thing.binding.BaseThingHandlerFactory;
 import org.eclipse.smarthome.core.thing.binding.ThingHandler;
 import org.openhab.binding.isy.discovery.ISYDeviceDiscovery;
+import org.openhab.binding.isy.handler.GenericContactHandler;
 import org.openhab.binding.isy.handler.GenericDimmerHandler;
 import org.openhab.binding.isy.handler.GenericSwitchHandler;
 import org.openhab.binding.isy.handler.ISYHandler;
@@ -46,7 +47,8 @@ public class ISYHandlerFactory extends BaseThingHandlerFactory {
             .synchronizedMap(new HashMap<String, ServiceRegistration<?>>());
 
     private final static Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = new HashSet<>(
-            Arrays.asList(THING_TYPE_ISY, THING_TYPE_DIMMER, THING_TYPE_SWITCH, THING_TYPE_MOTION_SENSOR));
+            Arrays.asList(THING_TYPE_ISY, THING_TYPE_DIMMER, THING_TYPE_SWITCH, THING_TYPE_MOTION_SENSOR,
+                    THING_TYPE_CONTACT_SENSOR, THING_TYPE_OUTLET));
 
     @Override
     public boolean supportsThingType(ThingTypeUID thingTypeUID) {
@@ -68,9 +70,13 @@ public class ISYHandlerFactory extends BaseThingHandlerFactory {
             return new GenericSwitchHandler(thing);
         } else if (thingTypeUID.equals(THING_TYPE_MOTION_SENSOR)) {
             return new MotionSensorHandler(thing);
+        } else if (thingTypeUID.equals(THING_TYPE_CONTACT_SENSOR)) {
+            return new GenericContactHandler(thing);
+        } else if (thingTypeUID.equals(THING_TYPE_OUTLET)) {
+            return new GenericSwitchHandler(thing, true);
+        } else {
+            return null;
         }
-
-        return null;
     }
 
     @Override

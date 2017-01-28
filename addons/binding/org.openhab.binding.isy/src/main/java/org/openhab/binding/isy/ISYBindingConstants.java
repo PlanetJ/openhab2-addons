@@ -8,6 +8,7 @@
 package org.openhab.binding.isy;
 
 import org.eclipse.smarthome.core.thing.ThingTypeUID;
+import org.eclipse.smarthome.core.thing.type.ChannelTypeUID;
 
 /**
  * The {@link ISYBinding} class defines common constants, which are
@@ -23,11 +24,24 @@ public class ISYBindingConstants {
     public final static ThingTypeUID THING_TYPE_ISY = new ThingTypeUID(BINDING_ID, "isy");
     public final static ThingTypeUID THING_TYPE_DIMMER = new ThingTypeUID(BINDING_ID, "dimmer");
     public final static ThingTypeUID THING_TYPE_SWITCH = new ThingTypeUID(BINDING_ID, "switch");
+    public final static ThingTypeUID THING_TYPE_OUTLET = new ThingTypeUID(BINDING_ID, "outlet");
     public final static ThingTypeUID THING_TYPE_MOTION_SENSOR = new ThingTypeUID(BINDING_ID, "motionSensor");
+    public final static ThingTypeUID THING_TYPE_CONTACT_SENSOR = new ThingTypeUID(BINDING_ID, "contactSensor");
 
     // List of all Channel ids
-    public final static String CHANNEL_SWITCH_STATE = "switchState";
+    public final static String CHANNEL_STATE = "state";
+    public final static String CHANNEL_STATE_2 = "state2";
     public final static String CHANNEL_BRIGHTNESS = "brightness";
+    public final static String CHANNEL_MOTION = "motion";
+    public final static String CHANNEL_DUSK_DAWN = "duskDawn";
+    public final static String CHANNEL_BATTERY = "battery";
+    public final static String CHANNEL_CONTROL = "control";
+    public final static String CHANNEL_SCENE = "scene";
+    public final static String CHANNEL_STATE_VARIABLE = "stateVariable";
+
+    public final static ChannelTypeUID CHANNEL_TYPE_SCENE = new ChannelTypeUID(BINDING_ID, CHANNEL_SCENE);
+    public final static ChannelTypeUID CHANNEL_TYPE_STATE_VARIABLE = new ChannelTypeUID(BINDING_ID,
+            CHANNEL_STATE_VARIABLE);
 
     // Upnp Discovery
     public static final String ISY = "ISY";

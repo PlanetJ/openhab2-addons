@@ -7,10 +7,13 @@
  */
 package org.openhab.binding.isy.handler;
 
+import static org.openhab.binding.isy.ISYBindingConstants.*;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
@@ -22,26 +25,38 @@ import org.eclipse.jetty.client.util.BasicAuthentication;
 import org.eclipse.jetty.http.HttpStatus;
 import org.eclipse.smarthome.config.core.Configuration;
 import org.eclipse.smarthome.config.discovery.DiscoveryService;
+import org.eclipse.smarthome.core.library.types.DecimalType;
+import org.eclipse.smarthome.core.library.types.OnOffType;
+import org.eclipse.smarthome.core.library.types.StringType;
 import org.eclipse.smarthome.core.thing.Bridge;
+import org.eclipse.smarthome.core.thing.Channel;
 import org.eclipse.smarthome.core.thing.ChannelUID;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingStatus;
 import org.eclipse.smarthome.core.thing.ThingStatusDetail;
 import org.eclipse.smarthome.core.thing.binding.BaseBridgeHandler;
 import org.eclipse.smarthome.core.thing.binding.ThingHandler;
+import org.eclipse.smarthome.core.thing.binding.builder.ChannelBuilder;
+import org.eclipse.smarthome.core.thing.binding.builder.ThingBuilder;
 import org.eclipse.smarthome.core.types.Command;
+import org.eclipse.smarthome.core.types.RefreshType;
 import org.openhab.binding.isy.ISYBindingConstants;
 import org.openhab.binding.isy.discovery.ISYDeviceDiscovery;
 import org.openhab.binding.isy.internal.InsteonAddress;
 import org.openhab.binding.isy.internal.NodeAddress;
+import org.openhab.binding.isy.internal.SceneAddress;
 import org.openhab.binding.isy.internal.WebsocketEventClient;
 import org.openhab.binding.isy.internal.WebsocketEventHandler;
 import org.openhab.binding.isy.internal.protocol.Event;
+import org.openhab.binding.isy.internal.protocol.Group;
 import org.openhab.binding.isy.internal.protocol.Node;
 import org.openhab.binding.isy.internal.protocol.Nodes;
 import org.openhab.binding.isy.internal.protocol.Properties;
 import org.openhab.binding.isy.internal.protocol.Property;
+import org.openhab.binding.isy.internal.protocol.StateVariable;
+import org.openhab.binding.isy.internal.protocol.StateVariable.ValueType;
 import org.openhab.binding.isy.internal.protocol.SubscriptionResponse;
+import org.openhab.binding.isy.internal.protocol.VariableList;
 import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +74,8 @@ public class ISYHandler extends BaseBridgeHandler implements WebsocketEventHandl
 
     private Logger logger = LoggerFactory.getLogger(ISYHandler.class);
 
+    public static final String PROPERY_STATUS = "ST";
+
     private String baseUrl;
     private HttpClient httpClient;
     private WebsocketEventClient websocketEventClient;
@@ -74,12 +91,64 @@ public class ISYHandler extends BaseBridgeHandler implements WebsocketEventHandl
         xStream.ignoreUnknownElements();
         xStream.setClassLoader(ISYDeviceDiscovery.class.getClassLoader());
         xStream.processAnnotations(new Class[] { Nodes.class, Node.class, Properties.class, Property.class, Event.class,
-                SubscriptionResponse.class });
+                SubscriptionResponse.class, Group.class, VariableList.class, StateVariable.class,
+                StateVariable.ValueType.class });
 
     }
 
     @Override
     public void handleCommand(ChannelUID channelUID, Command command) {
+        Channel channel = getThing().getChannel(channelUID.getId());
+
+        if (channel != null) {
+            if (CHANNEL_TYPE_SCENE.equals(channel.getChannelTypeUID())) {
+                handleSceneCommand(channel, command);
+            } else if (CHANNEL_TYPE_STATE_VARIABLE.equals(channel.getChannelTypeUID())) {
+                handleVariableCommand(channel, command);
+            }
+        }
+    }
+
+    private void handleVariableCommand(Channel channel, Command anyCommand) {
+        String id = channel.getProperties().get("id");
+        boolean isBidirectional = (boolean) channel.getConfiguration().get("bidirectional");
+        if (isBidirectional && anyCommand instanceof DecimalType) {
+            int value = ((DecimalType) anyCommand).intValue();
+            setStateVariable(id, value);
+        } else if (anyCommand == RefreshType.REFRESH) {
+            Integer value = getStateVariable(id);
+            if (value != null) {
+                updateState(channel.getUID(), new DecimalType(value));
+            }
+        }
+    }
+
+    private void handleSceneCommand(Channel channel, Command anyCommand) {
+        String sceneAddress = channel.getProperties().get("address");
+        logger.debug("Got command {} for scene", anyCommand, sceneAddress);
+        OnOffType command = null;
+        if (anyCommand instanceof OnOffType) {
+            command = (OnOffType) anyCommand;
+        } else if (anyCommand instanceof StringType) {
+            try {
+                command = OnOffType.valueOf(anyCommand.toFullString());
+            } catch (Exception e) {
+                // bad command
+                return;
+            }
+        } else if (anyCommand instanceof DecimalType) {
+            int value = ((DecimalType) anyCommand).intValue();
+            command = value > 0 ? OnOffType.ON : OnOffType.OFF;
+        } else {
+            // not supported
+            return;
+        }
+
+        if (command == OnOffType.ON) {
+            sendNodeCommandOn(new SceneAddress(sceneAddress));
+        } else {
+            sendNodeCommandOff(new SceneAddress(sceneAddress));
+        }
 
     }
 
@@ -127,6 +196,7 @@ public class ISYHandler extends BaseBridgeHandler implements WebsocketEventHandl
             if (response.getStatus() == HttpStatus.OK_200) {
                 updateStatus(ThingStatus.ONLINE);
                 startSubscribe(username, password);
+                loadChannels();
             } else if (response.getStatus() == HttpStatus.FORBIDDEN_403
                     || response.getStatus() == HttpStatus.UNAUTHORIZED_401) {
                 updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR, "Invalid credentials");
@@ -139,6 +209,45 @@ public class ISYHandler extends BaseBridgeHandler implements WebsocketEventHandl
         } catch (Exception e) {
             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR, e.getMessage());
             logger.error("Error communicatiing with ISY", e);
+        }
+    }
+
+    private void loadChannels() {
+        ThingBuilder thingBuilder = editThing();
+        loadScenes(thingBuilder);
+        loadVariables(thingBuilder);
+        updateThing(thingBuilder.build());
+    }
+
+    private void loadScenes(ThingBuilder thingBuilder) {
+        removeAllChannels(thingBuilder, ISYBindingConstants.CHANNEL_SCENE);
+        List<Group> groups = getNodes().getGroups();
+        for (Group group : groups) {
+            if (group.getName().equals("ISY")) {
+                continue;
+            }
+            thingBuilder.withChannel(
+                    ChannelBuilder.create(new ChannelUID(getThing().getUID(), "scene" + group.getAddress()), "Switch")
+                            .withProperties(Collections.singletonMap("address", group.getAddress()))
+                            .withType(ISYBindingConstants.CHANNEL_TYPE_SCENE).withLabel(group.getName()).build());
+        }
+    }
+
+    private void loadVariables(ThingBuilder thingBuilder) {
+        removeAllChannels(thingBuilder, ISYBindingConstants.CHANNEL_STATE_VARIABLE);
+        for (StateVariable stateVariable : getVariables().getStateVariables()) {
+            thingBuilder.withChannel(ChannelBuilder
+                    .create(new ChannelUID(getThing().getUID(), "stateVariable" + stateVariable.getId()), "Number")
+                    .withType(ISYBindingConstants.CHANNEL_TYPE_STATE_VARIABLE).withLabel(stateVariable.getName())
+                    .withProperties(Collections.singletonMap("id", stateVariable.getId())).build());
+        }
+    }
+
+    private void removeAllChannels(ThingBuilder thingBuilder, String channelType) {
+        for (Channel channel : getThing().getChannels()) {
+            if (channel.getChannelTypeUID().getId().equals(channelType)) {
+                thingBuilder.withoutChannel(channel.getUID());
+            }
         }
     }
 
@@ -164,6 +273,16 @@ public class ISYHandler extends BaseBridgeHandler implements WebsocketEventHandl
             return (Nodes) xStream.fromXML(response);
         } catch (Exception e) {
             logger.error("Error retrieving nodes ", e);
+            return null;
+        }
+    }
+
+    public VariableList getVariables() {
+        try {
+            String response = createRestRequest("/vars/definitions/2").send().getContentAsString();
+            return (VariableList) xStream.fromXML(response);
+        } catch (Exception e) {
+            logger.error("Error retrieving variables", e);
             return null;
         }
     }
@@ -229,6 +348,25 @@ public class ISYHandler extends BaseBridgeHandler implements WebsocketEventHandl
             return (Properties) xStream.fromXML(response);
         } catch (Exception e) {
             logger.error("Error ", e);
+            return null;
+        }
+    }
+
+    public void setStateVariable(String id, int value) {
+        try {
+            createRestRequest("/vars/set/2/" + id + "/" + String.valueOf(value)).send();
+        } catch (Exception e) {
+            logger.error("Error setting variable {} to {}", id, value);
+        }
+    }
+
+    public Integer getStateVariable(String id) {
+        try {
+            String response = createRestRequest("/vars/get/2/" + id).send().getContentAsString();
+            ValueType value = (ValueType) xStream.fromXML(response);
+            return Integer.parseInt(value.getValue());
+        } catch (Exception e) {
+            logger.error("Error getting state variable value for id {}", id);
             return null;
         }
     }

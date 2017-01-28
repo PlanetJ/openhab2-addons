@@ -47,7 +47,19 @@
         <label>Insteon Switch</label>
         <description>Insteon Switchable Device (On/Off Relay)</description>
         <channels>
-            <channel typeId="switch" id="switchState"></channel>
+            <channel typeId="switch" id="state"></channel>
+        </channels>
+    </thing-type>
+    
+    <thing-type id="outlet">
+        <supported-bridge-type-refs>
+            <bridge-type-ref id="isy"/>
+        </supported-bridge-type-refs>
+        <label>Insteon Dual Switch Outlet</label>
+        <description>Insteon Dual Outlet (On/Off Relay)</description>
+        <channels>
+            <channel typeId="switch" id="state"/>
+            <channel typeId="switch" id="state2"/>
         </channels>
     </thing-type>
     
@@ -58,8 +70,8 @@
         <label>Insteon Motion Sensor</label>
         <description>Model 2842-222</description>
         <channels>
-            <channel typeId="contact" id="motionState">
-                <label>Motion</label>
+            <channel typeId="contact" id="motion">
+                <label>Motion</label>                
             </channel>
             <channel typeId="contact" id="duskDawn">
                 <label>Dusk</label>
@@ -69,6 +81,25 @@
             </channel>
         </channels>
     </thing-type>
+    
+    <thing-type id="contactSensor">
+        <supported-bridge-type-refs>
+            <bridge-type-ref id="isy"/>
+        </supported-bridge-type-refs>
+        <label>Insteon Contact Sensor</label>
+        <description>Sensors that provide open/closed state</description>
+        <channels>
+            <channel typeId="contact" id="state"/>
+        </channels>
+        <config-description>
+            <parameter name="inverse" type="boolean" readOnly="false">
+                <label>Inverse</label>
+                <description>Inverse state so that Open = Off and Closed = On</description>
+                <default>false</default>
+            </parameter>
+        </config-description>
+    </thing-type>
+    
 
     <channel-type id="brightness">
         <item-type>Dimmer</item-type>
@@ -87,7 +118,24 @@
         <label>Open/Close</label>
         <category>Contact</category>
     </channel-type>
+
+    <channel-type id="scene">
+        <item-type>Switch</item-type>
+        <label>Scene</label>
+        <category>Switch</category>
+    </channel-type>
     
+    <channel-type id="stateVariable">
+        <item-type>Number</item-type>
+        <label>State Variable</label>
+        <config-description>
+            <parameter name="bidirectional" type="boolean">
+                <label>Bidirectional</label>
+                <default>false</default>
+                <description>Enable to allow openhab to update the state variable on the isy.</description>
+            </parameter>
+        </config-description>
+    </channel-type>
     
 
 </thing:thing-descriptions>

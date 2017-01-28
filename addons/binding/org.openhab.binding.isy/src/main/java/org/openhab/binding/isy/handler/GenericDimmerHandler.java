@@ -37,9 +37,11 @@ public class GenericDimmerHandler extends BaseHandler {
         } else if (command instanceof RefreshType) {
             // Update status
             Properties properties = isyHandler.getStatus(address.channel(1));
-            for (Property prop : properties.getProperties()) {
-                if (prop.getId().equals("ST")) {
-                    updateBrightness(prop.getValue());
+            if (properties != null) {
+                for (Property prop : properties.getProperties()) {
+                    if (prop.getId().equals("ST")) {
+                        updateBrightness(prop.getValue());
+                    }
                 }
             }
         }

@@ -11,21 +11,29 @@ import org.openhab.binding.isy.internal.protocol.Property;
 
 public class GenericSwitchHandler extends BaseHandler {
 
+    private final boolean dual;
+
     public GenericSwitchHandler(Thing thing) {
+        this(thing, false);
+    }
+
+    public GenericSwitchHandler(Thing thing, boolean dual) {
         super(thing);
+        this.dual = dual;
     }
 
     @Override
     public void handleCommand(ChannelUID channelUID, Command command) {
+        int channel = channelUID.getIdWithoutGroup().equals(ISYBindingConstants.CHANNEL_STATE_2) ? 2 : 1;
         if (command == OnOffType.ON) {
-            isyHandler.sendNodeCommandOn(address.channel(1));
+            isyHandler.sendNodeCommandOn(address.channel(channel));
         } else if (command == OnOffType.OFF) {
-            isyHandler.sendNodeCommandOff(address.channel(1));
+            isyHandler.sendNodeCommandOff(address.channel(channel));
         } else if (command == RefreshType.REFRESH) {
-            Properties props = isyHandler.getStatus(address.channel(1));
-            for (Property prop : props.getProperties()) {
-                if (prop.getId().equals("ST")) {
-                    updateSwitchState(prop.getValue());
+            Properties props = isyHandler.getStatus(address.channel(channel));
+            if (props != null) {
+                for (Property prop : props.getProperties()) {
+                    propertyUpdated(channel, prop.getId(), prop.getValue());
                 }
             }
         }
@@ -33,18 +41,10 @@ public class GenericSwitchHandler extends BaseHandler {
 
     @Override
     public void propertyUpdated(int channel, String property, String value) {
-        if ("ST".equals(property)) {
-            updateSwitchState(value);
+        if (ISYHandler.PROPERY_STATUS.equals(property)) {
+            boolean isOn = Integer.parseInt(value) > 0;
+            updateState(channel == 1 ? ISYBindingConstants.CHANNEL_STATE : ISYBindingConstants.CHANNEL_STATE_2,
+                    isOn ? OnOffType.ON : OnOffType.OFF);
         }
     }
-
-    private void updateSwitchState(String state) {
-        try {
-            int value = Integer.parseInt(state);
-            updateState(ISYBindingConstants.CHANNEL_SWITCH_STATE, value > 0 ? OnOffType.ON : OnOffType.OFF);
-        } catch (NumberFormatException e) {
-            // should never happen
-        }
-    }
-
 }
