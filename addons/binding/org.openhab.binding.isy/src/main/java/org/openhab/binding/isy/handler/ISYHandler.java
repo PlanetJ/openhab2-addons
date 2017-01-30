@@ -13,8 +13,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import org.eclipse.jetty.client.HttpClient;
@@ -40,6 +40,7 @@ import org.eclipse.smarthome.core.thing.binding.builder.ChannelBuilder;
 import org.eclipse.smarthome.core.thing.binding.builder.ThingBuilder;
 import org.eclipse.smarthome.core.types.Command;
 import org.eclipse.smarthome.core.types.RefreshType;
+import org.eclipse.smarthome.core.types.State;
 import org.openhab.binding.isy.ISYBindingConstants;
 import org.openhab.binding.isy.discovery.ISYDeviceDiscovery;
 import org.openhab.binding.isy.internal.InsteonAddress;
@@ -98,8 +99,8 @@ public class ISYHandler extends BaseBridgeHandler implements WebsocketEventHandl
 
     @Override
     public void handleCommand(ChannelUID channelUID, Command command) {
+        logger.debug("Channel {} got command {}", channelUID.getAsString(), command.toString());
         Channel channel = getThing().getChannel(channelUID.getId());
-
         if (channel != null) {
             if (CHANNEL_TYPE_SCENE.equals(channel.getChannelTypeUID())) {
                 handleSceneCommand(channel, command);
@@ -109,10 +110,33 @@ public class ISYHandler extends BaseBridgeHandler implements WebsocketEventHandl
         }
     }
 
+    @Override
+    public void handleUpdate(ChannelUID channelUID, State newState) {
+        logger.debug("Channel {} got update {}", channelUID.getAsString(), newState.toString());
+        Channel channel = getThing().getChannel(channelUID.getId());
+        if (channel != null) {
+            if (CHANNEL_TYPE_STATE_VARIABLE.equals(channel.getChannelTypeUID())) {
+                String id = channel.getProperties().get("id");
+                if (newState instanceof DecimalType) {
+                    setStateVariable(id, ((DecimalType) newState).intValue());
+                } else if (newState instanceof StringType) {
+                    try {
+                        OnOffType state = OnOffType.valueOf(newState.toFullString());
+                        setStateVariable(id, state == OnOffType.ON ? 1 : 0);
+                    } catch (Exception e) {
+                        logger.error("Unknown string command {}", newState.toFullString());
+                    }
+                } else if (newState instanceof OnOffType) {
+                    setStateVariable(id, newState == OnOffType.ON ? 1 : 0);
+                }
+            }
+        }
+    }
+
     private void handleVariableCommand(Channel channel, Command anyCommand) {
         String id = channel.getProperties().get("id");
-        boolean isBidirectional = (boolean) channel.getConfiguration().get("bidirectional");
-        if (isBidirectional && anyCommand instanceof DecimalType) {
+        Boolean isBidirectional = (Boolean) channel.getConfiguration().get("bidirectional");
+        if (isBidirectional != null && isBidirectional && anyCommand instanceof DecimalType) {
             int value = ((DecimalType) anyCommand).intValue();
             setStateVariable(id, value);
         } else if (anyCommand == RefreshType.REFRESH) {
@@ -214,36 +238,57 @@ public class ISYHandler extends BaseBridgeHandler implements WebsocketEventHandl
 
     private void loadChannels() {
         ThingBuilder thingBuilder = editThing();
-        loadScenes(thingBuilder);
-        loadVariables(thingBuilder);
-        updateThing(thingBuilder.build());
+        if (loadScenes(thingBuilder) && loadVariables(thingBuilder)) {
+            updateThing(thingBuilder.build());
+        } else {
+            logger.info("Loading scenes or variables failed, scheduling a retry");
+            scheduler.schedule(new Runnable() {
+
+                @Override
+                public void run() {
+                    loadChannels();
+                }
+            }, 15, TimeUnit.SECONDS);
+        }
     }
 
-    private void loadScenes(ThingBuilder thingBuilder) {
-        removeAllChannels(thingBuilder, ISYBindingConstants.CHANNEL_SCENE);
-        List<Group> groups = getNodes().getGroups();
-        for (Group group : groups) {
-            if (group.getName().equals("ISY")) {
-                continue;
+    private boolean loadScenes(ThingBuilder thingBuilder) {
+        Nodes nodes = getNodes();
+        if (nodes != null && nodes.getGroups() != null) {
+            removeChannels(thingBuilder, ISYBindingConstants.CHANNEL_SCENE);
+            for (Group group : nodes.getGroups()) {
+                if (group.getName().equals("ISY")) {
+                    continue;
+                }
+                thingBuilder.withChannel(ChannelBuilder
+                        .create(new ChannelUID(getThing().getUID(), "scene" + group.getAddress()), "Switch")
+                        .withProperties(Collections.singletonMap("address", group.getAddress()))
+                        .withType(ISYBindingConstants.CHANNEL_TYPE_SCENE).withLabel(group.getName()).build());
             }
-            thingBuilder.withChannel(
-                    ChannelBuilder.create(new ChannelUID(getThing().getUID(), "scene" + group.getAddress()), "Switch")
-                            .withProperties(Collections.singletonMap("address", group.getAddress()))
-                            .withType(ISYBindingConstants.CHANNEL_TYPE_SCENE).withLabel(group.getName()).build());
+            return true;
         }
+        return false;
     }
 
-    private void loadVariables(ThingBuilder thingBuilder) {
-        removeAllChannels(thingBuilder, ISYBindingConstants.CHANNEL_STATE_VARIABLE);
-        for (StateVariable stateVariable : getVariables().getStateVariables()) {
-            thingBuilder.withChannel(ChannelBuilder
-                    .create(new ChannelUID(getThing().getUID(), "stateVariable" + stateVariable.getId()), "Number")
-                    .withType(ISYBindingConstants.CHANNEL_TYPE_STATE_VARIABLE).withLabel(stateVariable.getName())
-                    .withProperties(Collections.singletonMap("id", stateVariable.getId())).build());
+    private boolean loadVariables(ThingBuilder thingBuilder) {
+        VariableList variables = getVariables();
+        if (variables != null && variables.getStateVariables() != null) {
+            removeChannels(thingBuilder, ISYBindingConstants.CHANNEL_STATE_VARIABLE);
+            for (StateVariable stateVariable : variables.getStateVariables()) {
+                Configuration defaultConfig = new Configuration();
+                defaultConfig.put("bidirectional", false);
+                thingBuilder.withChannel(ChannelBuilder
+                        .create(new ChannelUID(getThing().getUID(), "stateVariable" + stateVariable.getId()), "Number")
+                        .withConfiguration(defaultConfig).withType(ISYBindingConstants.CHANNEL_TYPE_STATE_VARIABLE)
+                        .withLabel(stateVariable.getName())
+                        .withProperties(Collections.singletonMap("id", stateVariable.getId())).build());
+            }
+            return true;
         }
+        return false;
     }
 
-    private void removeAllChannels(ThingBuilder thingBuilder, String channelType) {
+    private void removeChannels(ThingBuilder thingBuilder, String channelType) {
         for (Channel channel : getThing().getChannels()) {
             if (channel.getChannelTypeUID().getId().equals(channelType)) {
                 thingBuilder.withoutChannel(channel.getUID());
@@ -353,6 +398,7 @@ public class ISYHandler extends BaseBridgeHandler implements WebsocketEventHandl
     }
 
     public void setStateVariable(String id, int value) {
+        logger.debug("Setting state for var {} to {}", id, value);
         try {
             createRestRequest("/vars/set/2/" + id + "/" + String.valueOf(value)).send();
         } catch (Exception e) {
