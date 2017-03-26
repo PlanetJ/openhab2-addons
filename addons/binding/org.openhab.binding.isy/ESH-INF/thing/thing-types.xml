@@ -100,6 +100,35 @@
         </config-description>
     </thing-type>
     
+    <thing-type id="elkZone">
+        <supported-bridge-type-refs>
+            <bridge-type-ref id="isy"/>
+        </supported-bridge-type-refs>
+        <label>Elk Zone</label>
+        <description>Elk Security Zone</description>
+        <channels>
+            <channel typeId="elkZoneStatus" id="status"/>
+            <channel typeId="elkZoneVoltage" id="voltage"/>
+        </channels>
+        <properties>
+            <property name="area">Area</property>
+        </properties>
+    </thing-type>
+    
+    <thing-type id="zwaveBinarySensor">
+        <supported-bridge-type-refs>
+            <bridge-type-ref id="isy"/>
+        </supported-bridge-type-refs>
+        <label>Zwave Binary Sensor</label>
+        <channels>
+            <channel typeId="switch" id="status">
+                <label>Status</label>
+            </channel>
+        </channels>
+        <properties>
+            <property name="address">Address</property>
+        </properties>
+    </thing-type>    
 
     <channel-type id="brightness">
         <item-type>Dimmer</item-type>
@@ -118,10 +147,11 @@
         <label>Open/Close</label>
         <category>Contact</category>
     </channel-type>
-
+    
+    <!-- Dedicated channel type for scenes so we can manage them dynamically -->
     <channel-type id="scene">
         <item-type>Switch</item-type>
-        <label>Scene</label>
+        <label>On/Off</label>
         <category>Switch</category>
     </channel-type>
     
@@ -137,5 +167,24 @@
         </config-description>
     </channel-type>
     
+    <channel-type id="elkZoneStatus">
+        <item-type>Number</item-type>
+        <label>Status</label>
+        <state readOnly="true">
+            <options>
+                <option value="0">Normal</option>
+                <option value="1">Trouble</option>
+                <option value="2">Violated</option>
+                <option value="3">Bypassed</option>
+            </options>
+        </state>
+    </channel-type>
+    
+    <channel-type id="elkZoneVoltage">
+        <item-type>Number</item-type>
+        <label>Voltage</label>
+        <category>Energy</category>
+        <state readOnly="true"/>
+    </channel-type>
 
 </thing:thing-descriptions>

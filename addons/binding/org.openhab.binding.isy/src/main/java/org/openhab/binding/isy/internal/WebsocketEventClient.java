@@ -1,6 +1,8 @@
 package org.openhab.binding.isy.internal;
 
+import java.awt.geom.Area;
 import java.net.URI;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -13,11 +15,30 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
+import org.openhab.binding.isy.discovery.ISYDeviceDiscovery;
 import org.openhab.binding.isy.internal.protocol.Event;
+import org.openhab.binding.isy.internal.protocol.EventInfo;
+import org.openhab.binding.isy.internal.protocol.Group;
+import org.openhab.binding.isy.internal.protocol.Node;
+import org.openhab.binding.isy.internal.protocol.Nodes;
+import org.openhab.binding.isy.internal.protocol.Properties;
+import org.openhab.binding.isy.internal.protocol.Property;
+import org.openhab.binding.isy.internal.protocol.RestResponse;
+import org.openhab.binding.isy.internal.protocol.StateVariable;
+import org.openhab.binding.isy.internal.protocol.SubscriptionResponse;
+import org.openhab.binding.isy.internal.protocol.VariableList;
+import org.openhab.binding.isy.internal.protocol.elk.AreaEvent;
+import org.openhab.binding.isy.internal.protocol.elk.Areas;
+import org.openhab.binding.isy.internal.protocol.elk.ElkStatus;
+import org.openhab.binding.isy.internal.protocol.elk.Topology;
+import org.openhab.binding.isy.internal.protocol.elk.Zone;
+import org.openhab.binding.isy.internal.protocol.elk.ZoneEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Strings;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.StaxDriver;
 
 /**
  *
@@ -68,6 +89,8 @@ public class WebsocketEventClient {
         upgradeRequest.setHeader("Origin", "com.universal-devices.websockets.isy");
 
         client = new WebSocketClient();
+        // client.setConnectTimeout(5000);
+        // client.setExecutor(executorService);
         try {
             client.start();
             client.connect(socketHandler, new URI(url), upgradeRequest);
@@ -126,18 +149,57 @@ public class WebsocketEventClient {
         @OnWebSocketMessage
         public void onMessage(String message) {
             logger.trace("Got message [{}]", message);
-            Object messageObj = xStream.fromXML(message);
+            Object messageObj;
+            try {
+                messageObj = xStream.fromXML(message);
+            } catch (Exception e) {
+                logger.error("Error parsing message [{}]", message);
+                return;
+            }
             if (messageObj instanceof Event) {
                 Event event = (Event) messageObj;
-                logger.debug("Node {} got control message '{}' [{}]]", event.getNode(), event.getControl(),
+                logger.debug("Node '{}' got control message '{}' action '{}'",
+                        Strings.isNullOrEmpty(event.getNode()) ? "n/a" : event.getNode(), event.getControl(),
                         event.getAction());
                 if (!event.getControl().startsWith("_")) {
                     if (handler != null) {
                         handler.nodePropertyUpdated(event.getNode(), event.getControl(), event.getAction());
                     }
+                } else if ("_19".equals(event.getControl())) {
+                    // Elk events
+                    if ("3".equals(event.getAction())) {
+                        // Zone event
+                        ZoneEvent zoneEvent = event.getEventInfo().getZoneEvent();
+                        logger.debug(zoneEvent.toString());
+                        if (handler != null) {
+                            handler.elkZoneEvent(zoneEvent);
+                        }
+                    } else if ("2".equals(event.getAction())) {
+                        // Area Event
+                        AreaEvent areaEvent = event.getEventInfo().getAreaEvent();
+                        logger.debug(areaEvent.toString());
+                        if (handler != null) {
+                            handler.elkAreaEvent(areaEvent);
+                        }
+                    }
                 }
             }
         }
+    }
+
+    public static void main(String args[]) {
+        // Configure Xstream to deserialize the responses
+        XStream xStream = new XStream(new StaxDriver());
+        xStream.ignoreUnknownElements();
+        xStream.setClassLoader(ISYDeviceDiscovery.class.getClassLoader());
+        xStream.processAnnotations(new Class[] { Nodes.class, Node.class, Properties.class, Property.class, Event.class,
+                EventInfo.class, SubscriptionResponse.class, Group.class, VariableList.class, StateVariable.class,
+                StateVariable.ValueType.class, Topology.class, Areas.class, Area.class, Zone.class, ZoneEvent.class,
+                AreaEvent.class, ElkStatus.class, RestResponse.class });
+
+        WebsocketEventClient client = new WebsocketEventClient(args[0], args[1], args[2], xStream,
+                Executors.newScheduledThreadPool(2));
+        client.start();
     }
 
 }

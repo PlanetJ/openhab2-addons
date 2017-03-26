@@ -62,8 +62,12 @@ public class InsteonAddress {
      */
     public static InsteonAddress parseNodeAddress(String nodeAddress) {
         int lastPos = nodeAddress.lastIndexOf(" ");
-        String deviceAddress = nodeAddress.substring(0, lastPos);
-        return new InsteonAddress(deviceAddress);
+        if (lastPos != -1) {
+            String deviceAddress = nodeAddress.substring(0, lastPos);
+            return new InsteonAddress(deviceAddress);
+        } else {
+            throw new IllegalArgumentException("Invalid nodeAddress");
+        }
     }
 
     public static InsteonAddressChannel parseNodeAddressChannel(String nodeAddress) {

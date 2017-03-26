@@ -10,8 +10,15 @@ import org.eclipse.smarthome.core.types.RefreshType;
 import org.openhab.binding.isy.ISYBindingConstants;
 import org.openhab.binding.isy.internal.protocol.Properties;
 import org.openhab.binding.isy.internal.protocol.Property;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class GenericDimmerHandler extends BaseHandler {
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+
+public class GenericDimmerHandler extends BaseInsteonHandler {
+
+    private Logger logger = LoggerFactory.getLogger(GenericDimmerHandler.class);
 
     public GenericDimmerHandler(Thing thing) {
         super(thing);
@@ -36,14 +43,26 @@ public class GenericDimmerHandler extends BaseHandler {
             }
         } else if (command instanceof RefreshType) {
             // Update status
-            Properties properties = isyHandler.getStatus(address.channel(1));
-            if (properties != null) {
-                for (Property prop : properties.getProperties()) {
-                    if (prop.getId().equals("ST")) {
-                        updateBrightness(prop.getValue());
+            logger.debug("Dimmer '{}' got REFRESH command", thing.getLabel());
+            Futures.addCallback(isyHandler.getStatus(address.channel(1)), new FutureCallback<Properties>() {
+
+                @Override
+                public void onFailure(Throwable arg0) {
+                    // TODO Auto-generated method stub
+
+                }
+
+                @Override
+                public void onSuccess(Properties properties) {
+                    if (properties != null) {
+                        for (Property prop : properties.getProperties()) {
+                            if (prop.getId().equals("ST")) {
+                                updateBrightness(prop.getValue());
+                            }
+                        }
                     }
                 }
-            }
+            });
         }
     }
 

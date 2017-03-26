@@ -5,18 +5,23 @@ import org.eclipse.smarthome.core.thing.ChannelUID;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.types.Command;
 import org.eclipse.smarthome.core.types.RefreshType;
-import org.openhab.binding.isy.ISYBindingConstants;
 import org.openhab.binding.isy.internal.protocol.Properties;
 import org.openhab.binding.isy.internal.protocol.Property;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MotionSensorHandler extends BaseHandler {
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+
+public class MotionSensorHandler extends BaseInsteonHandler {
+
+    private static final String CHANNEL_MOTION = "motion";
+    private static final String CHANNEL_DUSK_DAWN = "duskDawn";
+    private static final String CHANNEL_BATTERY = "battery";
 
     private Logger logger = LoggerFactory.getLogger(MotionSensorHandler.class);
 
-    private static String[] channelIds = new String[] { ISYBindingConstants.CHANNEL_MOTION,
-            ISYBindingConstants.CHANNEL_DUSK_DAWN, ISYBindingConstants.CHANNEL_BATTERY };
+    private static String[] channelIds = new String[] { CHANNEL_MOTION, CHANNEL_DUSK_DAWN, CHANNEL_BATTERY };
 
     public MotionSensorHandler(Thing thing) {
         super(thing);
@@ -26,13 +31,25 @@ public class MotionSensorHandler extends BaseHandler {
     public void handleCommand(ChannelUID channelUID, Command command) {
         if (command == RefreshType.REFRESH) {
             for (int c = 1; c <= 3; c++) {
+                final int index = c;
                 logger.debug("Refreshing status for node {}", address.channel(c));
-                Properties properties = isyHandler.getStatus(address.channel(c));
-                if (properties != null) {
-                    for (Property prop : properties.getProperties()) {
-                        propertyUpdated(c, prop.getId(), prop.getValue());
+                Futures.addCallback(isyHandler.getStatus(address.channel(c)), new FutureCallback<Properties>() {
+
+                    @Override
+                    public void onFailure(Throwable arg0) {
+                        // TODO Auto-generated method stub
+
                     }
-                }
+
+                    @Override
+                    public void onSuccess(Properties properties) {
+                        if (properties != null) {
+                            for (Property prop : properties.getProperties()) {
+                                propertyUpdated(index, prop.getId(), prop.getValue());
+                            }
+                        }
+                    }
+                });
             }
         }
     }

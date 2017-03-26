@@ -34,6 +34,9 @@ public class StateVariable {
         @XStreamAlias("val")
         private String value;
 
+        @XStreamAsAttribute
+        private String id;
+
         /**
          * @return the value
          */
@@ -46,6 +49,14 @@ public class StateVariable {
          */
         public void setValue(String value) {
             this.value = value;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
         }
 
     }

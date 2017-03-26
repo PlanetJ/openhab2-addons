@@ -24,6 +24,7 @@ import org.eclipse.smarthome.core.thing.ThingTypeUID;
 import org.eclipse.smarthome.core.thing.binding.BaseThingHandlerFactory;
 import org.eclipse.smarthome.core.thing.binding.ThingHandler;
 import org.openhab.binding.isy.discovery.ISYDeviceDiscovery;
+import org.openhab.binding.isy.handler.ElkZoneHandler;
 import org.openhab.binding.isy.handler.GenericContactHandler;
 import org.openhab.binding.isy.handler.GenericDimmerHandler;
 import org.openhab.binding.isy.handler.GenericSwitchHandler;
@@ -48,7 +49,7 @@ public class ISYHandlerFactory extends BaseThingHandlerFactory {
 
     private final static Set<ThingTypeUID> SUPPORTED_THING_TYPES_UIDS = new HashSet<>(
             Arrays.asList(THING_TYPE_ISY, THING_TYPE_DIMMER, THING_TYPE_SWITCH, THING_TYPE_MOTION_SENSOR,
-                    THING_TYPE_CONTACT_SENSOR, THING_TYPE_OUTLET));
+                    THING_TYPE_CONTACT_SENSOR, THING_TYPE_OUTLET, THING_TYPE_ELK_ZONE));
 
     @Override
     public boolean supportsThingType(ThingTypeUID thingTypeUID) {
@@ -74,6 +75,8 @@ public class ISYHandlerFactory extends BaseThingHandlerFactory {
             return new GenericContactHandler(thing);
         } else if (thingTypeUID.equals(THING_TYPE_OUTLET)) {
             return new GenericSwitchHandler(thing, true);
+        } else if (thingTypeUID.equals(THING_TYPE_ELK_ZONE)) {
+            return new ElkZoneHandler(thing);
         } else {
             return null;
         }

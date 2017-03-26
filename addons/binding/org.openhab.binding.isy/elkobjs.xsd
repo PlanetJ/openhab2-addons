@@ -1,0 +1,2594 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+			targetNamespace="http://www.universal-devices.com/wsdk/isy/elk/1.0/objects"
+			xmlns:uelk="http://www.universal-devices.com/wsdk/isy/elk/1.0/objects" 
+			elementFormDefault="unqualified">
+	<xsd:annotation>
+		<xsd:documentation>
+				Copyright 2007-2012 Universal Devices, Inc.
+				All Rights Reserved
+				
+				Defines all ELK Objects/Events			
+		</xsd:documentation>
+	</xsd:annotation>
+
+	<!-- Class Definitions and Common Types -->	
+	<xsd:simpleType name="AreaIDType">
+		<xsd:annotation>
+			<xsd:documentation>
+				There are 8 different areas for ELK security system
+				numbered from 1 to 8 inclusively
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">
+			<xsd:enumeration value="1"></xsd:enumeration>
+			<xsd:enumeration value="2"></xsd:enumeration>
+			<xsd:enumeration value="3"></xsd:enumeration>
+			<xsd:enumeration value="4"></xsd:enumeration>
+			<xsd:enumeration value="5"></xsd:enumeration>
+			<xsd:enumeration value="6"></xsd:enumeration>
+			<xsd:enumeration value="7"></xsd:enumeration>
+			<xsd:enumeration value="8"></xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="ZoneIDType">
+		<xsd:annotation>
+			<xsd:documentation>
+				Zones are between 1 and 208
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">
+			<xsd:minInclusive value="1"/>
+      		<xsd:maxInclusive value="208"/>	
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="AccessCode">
+		<xsd:annotation>
+			<xsd:documentation>
+				Usually a 4 or 6 digit numeric access code to arm/disarm
+				the security system
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="ArmType">
+		<xsd:annotation>
+			<xsd:documentation>
+				The mode to which the system is armed
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">
+			<xsd:enumeration value="0">
+				<xsd:annotation>
+					<xsd:documentation>
+						Disarm
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="1">
+				<xsd:annotation>
+					<xsd:documentation>
+						Arm Away
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="2">
+				<xsd:annotation>
+					<xsd:documentation>
+						Arm Stay
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="3">
+				<xsd:annotation>
+					<xsd:documentation>
+						Arm Stay Instant
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="4">
+				<xsd:annotation>
+					<xsd:documentation>
+						Arm Night 
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="5">
+				<xsd:annotation>
+					<xsd:documentation>
+						Arm Night Instant
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="6">
+				<xsd:annotation>
+					<xsd:documentation>
+						Arm Vacation 
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="7">
+				<xsd:annotation>
+					<xsd:documentation>
+						Arm to Next Away Mode 
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="8">
+				<xsd:annotation>
+					<xsd:documentation>
+						Arm to Next Stay Mode 
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>	
+	
+	<xsd:simpleType name="AudioZoneIDType">
+		<xsd:annotation>
+			<xsd:documentation>
+				Zones are between 1 and 18
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">
+			<xsd:minInclusive value="1"/>
+      		<xsd:maxInclusive value="18"/>	
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="KeypadType">
+		<xsd:annotation>
+			<xsd:documentation>
+				Defines a Keypad (1-8)
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">
+			<xsd:minInclusive value="1"/>
+      		<xsd:maxInclusive value="8"/>	
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="OutputIDType">
+		<xsd:annotation>
+			<xsd:documentation>
+				Defines an output (1-208)
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">
+			<xsd:minInclusive value="1"/>
+      		<xsd:maxInclusive value="208"/>	
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="ThermostatIDType">
+		<xsd:annotation>
+			<xsd:documentation>
+				Thermostat IDs are between 1 and 16
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">
+			<xsd:minInclusive value="1"/>
+      		<xsd:maxInclusive value="16"/>	
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="ThermostatCommandType">
+		<xsd:annotation>
+			<xsd:documentation>
+				The types of commands which can be applied to thermostats
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">
+			<xsd:enumeration value="1">
+				<xsd:annotation>
+					<xsd:documentation>
+						Mode
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="2">
+				<xsd:annotation>
+					<xsd:documentation>
+						Hold
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="3">
+				<xsd:annotation>
+					<xsd:documentation>
+						Fan
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="4">
+				<xsd:annotation>
+					<xsd:documentation>
+						Not Supported
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="5">
+				<xsd:annotation>
+					<xsd:documentation>
+						Cool Setpoint
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="6">
+				<xsd:annotation>
+					<xsd:documentation>
+						Heat Setpoint
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="AudioSourceType">
+		<xsd:annotation>
+			<xsd:documentation>
+				Audio Sources are between 1 and 12
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">
+			<xsd:minInclusive value="1"/>
+      		<xsd:maxInclusive value="12"/>	
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="AudioCommandType">
+		<xsd:annotation>
+			<xsd:documentation>
+				Sends audio commands to the attached/configured audio 
+				distribution system
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">
+			<xsd:enumeration value="0">
+				<xsd:annotation>
+					<xsd:documentation>
+						Power Off
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="1">
+				<xsd:annotation>
+					<xsd:documentation>
+						Power On
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="2">
+				<xsd:annotation>
+					<xsd:documentation>
+						Power Toggle
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="3">
+				<xsd:annotation>
+					<xsd:documentation>
+						Next Source
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="4">
+				<xsd:annotation>
+					<xsd:documentation>
+						Source Input	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="5">
+				<xsd:annotation>
+					<xsd:documentation>
+						Previous Select	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="6">
+				<xsd:annotation>
+					<xsd:documentation>
+						Next Select	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="7">
+				<xsd:annotation>
+					<xsd:documentation>
+						Volume Down	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="8">
+				<xsd:annotation>
+					<xsd:documentation>
+						Volume Up	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="9">
+				<xsd:annotation>
+					<xsd:documentation>
+						Mute Audio	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="10">
+				<xsd:annotation>
+					<xsd:documentation>
+						Volume Set	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="11">
+				<xsd:annotation>
+					<xsd:documentation>
+						Play	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="12">
+				<xsd:annotation>
+					<xsd:documentation>
+						Pause	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="13">
+				<xsd:annotation>
+					<xsd:documentation>
+						Stop	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="14">
+				<xsd:annotation>
+					<xsd:documentation>
+						Select Favorite 1	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="15">
+				<xsd:annotation>
+					<xsd:documentation>
+						Select Favorite 2	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="16">
+				<xsd:annotation>
+					<xsd:documentation>
+						Minus	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="17">
+				<xsd:annotation>
+					<xsd:documentation>
+						Plus	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="18">
+				<xsd:annotation>
+					<xsd:documentation>
+						All Zones Off
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="19">
+				<xsd:annotation>
+					<xsd:documentation>
+						All Zones On
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="20">
+				<xsd:annotation>
+					<xsd:documentation>
+						Audio Manufacturer
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	
+	<xsd:simpleType name="AlarmDefinitionType">
+		<xsd:annotation>
+			<xsd:documentation>
+				Alarms Definition
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">
+			<xsd:enumeration value="0">
+				<xsd:annotation>
+					<xsd:documentation>
+						Disabled	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="1">
+				<xsd:annotation>
+					<xsd:documentation>
+						Burglar Entry Exit 1	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="2">
+				<xsd:annotation>
+					<xsd:documentation>
+						Burglar Entry Exit 2	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="3">
+				<xsd:annotation>
+					<xsd:documentation>
+						Burglar Perimeter Instant
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="4">
+				<xsd:annotation>
+					<xsd:documentation>
+						Burglar Interior
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="5">
+				<xsd:annotation>
+					<xsd:documentation>
+						Burglar Interior Follower
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="6">
+				<xsd:annotation>
+					<xsd:documentation>
+						Burglar Interior Night
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="7">
+				<xsd:annotation>
+					<xsd:documentation>
+						Burglar Interior Night Delay
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="8">
+				<xsd:annotation>
+					<xsd:documentation>
+						Burglar 24 Hour 
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="9">
+				<xsd:annotation>
+					<xsd:documentation>
+						Burglar Box Tamper 
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="10">
+				<xsd:annotation>
+					<xsd:documentation>
+						Fire Alarm	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="11">
+				<xsd:annotation>
+					<xsd:documentation>
+						Fire Verified	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="12">
+				<xsd:annotation>
+					<xsd:documentation>
+						Fire Supervisory	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="13">
+				<xsd:annotation>
+					<xsd:documentation>
+						Aux Alarm 1	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="14">
+				<xsd:annotation>
+					<xsd:documentation>
+						Aux Alarm 2	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="15">
+				<xsd:annotation>
+					<xsd:documentation>
+						Keyfob 	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="16">
+				<xsd:annotation>
+					<xsd:documentation>
+						Non alarm	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="17">
+				<xsd:annotation>
+					<xsd:documentation>
+						Carbon Monoxide	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="18">
+				<xsd:annotation>
+					<xsd:documentation>
+						Emergency Alarm	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="19">
+				<xsd:annotation>
+					<xsd:documentation>
+						Freeze Alarm	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="20">
+				<xsd:annotation>
+					<xsd:documentation>
+						Gas Alarm	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="21">
+				<xsd:annotation>
+					<xsd:documentation>
+						Heat Alarm 
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="22">
+				<xsd:annotation>
+					<xsd:documentation>
+						Medical Alarm	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="23">
+				<xsd:annotation>
+					<xsd:documentation>
+						Police Alarm	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="24">
+				<xsd:annotation>
+					<xsd:documentation>
+						Police No Indication	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="25">
+				<xsd:annotation>
+					<xsd:documentation>
+						Water Alarm	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="26">
+				<xsd:annotation>
+					<xsd:documentation>
+						Key Momentary Arm/Disarm	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="27">
+				<xsd:annotation>
+					<xsd:documentation>
+						Key Momentary Arm Away	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="28">
+				<xsd:annotation>
+					<xsd:documentation>
+						Key Momentary Arm Stay	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="29">
+				<xsd:annotation>
+					<xsd:documentation>
+						Key Momentary Disarm 
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="30">
+				<xsd:annotation>
+					<xsd:documentation>
+						Key On/Off	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="31">
+				<xsd:annotation>
+					<xsd:documentation>
+						Mute Audibles	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="32">
+				<xsd:annotation>
+					<xsd:documentation>
+						Power Supervisory	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="33">
+				<xsd:annotation>
+					<xsd:documentation>
+						Temperature
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="34">
+				<xsd:annotation>
+					<xsd:documentation>
+						Analog Zone	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="35">
+				<xsd:annotation>
+					<xsd:documentation>
+						Phone Key	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="36">
+				<xsd:annotation>
+					<xsd:documentation>
+						Intercom Key	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	
+	<xsd:simpleType name="FunctionKeyType">
+		<xsd:annotation>
+			<xsd:documentation>
+				Function Keys on a Keypad
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">
+			<xsd:enumeration value="1">
+				<xsd:annotation>
+					<xsd:documentation>
+						F1	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="2">
+				<xsd:annotation>
+					<xsd:documentation>
+						F2	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="3">
+				<xsd:annotation>
+					<xsd:documentation>
+						F3	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="4">
+				<xsd:annotation>
+					<xsd:documentation>
+						F4	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="5">
+				<xsd:annotation>
+					<xsd:documentation>
+						F5	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="6">
+				<xsd:annotation>
+					<xsd:documentation>
+						F6	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="11">
+				<xsd:annotation>
+					<xsd:documentation>
+						Data
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>			
+			<xsd:enumeration value="20">
+				<xsd:annotation>
+					<xsd:documentation>
+						Stay	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>	
+			<xsd:enumeration value="21">
+				<xsd:annotation>
+					<xsd:documentation>
+						Exit	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="22">
+				<xsd:annotation>
+					<xsd:documentation>
+						Chime	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>	
+			<xsd:enumeration value="23">
+				<xsd:annotation>
+					<xsd:documentation>
+						Bypass	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="24">
+				<xsd:annotation>
+					<xsd:documentation>
+						ELK
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>	
+			<xsd:enumeration value="25">
+				<xsd:annotation>
+					<xsd:documentation>
+						Down
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="26">
+				<xsd:annotation>
+					<xsd:documentation>
+						Up	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>	
+			<xsd:enumeration value="27">
+				<xsd:annotation>
+					<xsd:documentation>
+						Right	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="28">
+				<xsd:annotation>
+					<xsd:documentation>
+						Left	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="29">
+				<xsd:annotation>
+					<xsd:documentation>
+						Star	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="30">
+				<xsd:annotation>
+					<xsd:documentation>
+						Pound	
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="SpeakWordType">
+		<xsd:annotation>
+			<xsd:documentation>
+				A predefined Word that can be spoken by the ELK 
+				system
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">	
+			<xsd:enumeration value="1"><xsd:annotation><xsd:documentation>_Custom1</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="2"><xsd:annotation><xsd:documentation>_Custom2</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="3"><xsd:annotation><xsd:documentation>_Custom3</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="4"><xsd:annotation><xsd:documentation>_Custom4</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="5"><xsd:annotation><xsd:documentation>_Custom5</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="6"><xsd:annotation><xsd:documentation>_Custom6</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="7"><xsd:annotation><xsd:documentation>_Custom7</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="8"><xsd:annotation><xsd:documentation>_Custom8</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="9"><xsd:annotation><xsd:documentation>_Custom9</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="10"><xsd:annotation><xsd:documentation>_Custom10</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="11"><xsd:annotation><xsd:documentation>Not Implemented</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="12"><xsd:annotation><xsd:documentation>Not Implemented</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="13"><xsd:annotation><xsd:documentation>Not Implemented</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="14"><xsd:annotation><xsd:documentation>Not Implemented</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="15"><xsd:annotation><xsd:documentation>Not Implemented</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="16"><xsd:annotation><xsd:documentation>Not Implemented</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="17"><xsd:annotation><xsd:documentation>Not Implemented</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="18"><xsd:annotation><xsd:documentation>Not Implemented</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="19"><xsd:annotation><xsd:documentation>Not Implemented</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="20"><xsd:annotation><xsd:documentation>Not Implemented</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="21"><xsd:annotation><xsd:documentation>Zero</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="22"><xsd:annotation><xsd:documentation>One</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="23"><xsd:annotation><xsd:documentation>Two</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="24"><xsd:annotation><xsd:documentation>Three</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="25"><xsd:annotation><xsd:documentation>Four</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="26"><xsd:annotation><xsd:documentation>Five</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="27"><xsd:annotation><xsd:documentation>Six</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="28"><xsd:annotation><xsd:documentation>Seven</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="29"><xsd:annotation><xsd:documentation>Eight</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="30"><xsd:annotation><xsd:documentation>Nine</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="31"><xsd:annotation><xsd:documentation>Ten</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="32"><xsd:annotation><xsd:documentation>Eleven</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="33"><xsd:annotation><xsd:documentation>Twelve</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="34"><xsd:annotation><xsd:documentation>Thirteen</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="35"><xsd:annotation><xsd:documentation>Fourteen</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="36"><xsd:annotation><xsd:documentation>Fifteen</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="37"><xsd:annotation><xsd:documentation>Sixteen</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="38"><xsd:annotation><xsd:documentation>Seventeen</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="39"><xsd:annotation><xsd:documentation>Eighteen</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="40"><xsd:annotation><xsd:documentation>Nineteen</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="41"><xsd:annotation><xsd:documentation>Twenty</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="42"><xsd:annotation><xsd:documentation>Thirty</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="43"><xsd:annotation><xsd:documentation>Fourty</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="44"><xsd:annotation><xsd:documentation>Fifty</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="45"><xsd:annotation><xsd:documentation>Sixty</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="46"><xsd:annotation><xsd:documentation>Seventy</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="47"><xsd:annotation><xsd:documentation>Eighty</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="48"><xsd:annotation><xsd:documentation>Ninety</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="49"><xsd:annotation><xsd:documentation>Hundred</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="50"><xsd:annotation><xsd:documentation>Thousand</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="51"><xsd:annotation><xsd:documentation>[200ms_Silence]</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="52"><xsd:annotation><xsd:documentation>[500ms_Silence]</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="53"><xsd:annotation><xsd:documentation>[800hz_Tone]</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="54"><xsd:annotation><xsd:documentation>A</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="55"><xsd:annotation><xsd:documentation>Access</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="56"><xsd:annotation><xsd:documentation>Acknowledged</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="57"><xsd:annotation><xsd:documentation>AC_power</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="58"><xsd:annotation><xsd:documentation>Activate</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="59"><xsd:annotation><xsd:documentation>Activated</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="60"><xsd:annotation><xsd:documentation>Active</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="61"><xsd:annotation><xsd:documentation>Adjust</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="62"><xsd:annotation><xsd:documentation>Air</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="63"><xsd:annotation><xsd:documentation>Alarm</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="64"><xsd:annotation><xsd:documentation>Alert</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="65"><xsd:annotation><xsd:documentation>All</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="66"><xsd:annotation><xsd:documentation>AM</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="67"><xsd:annotation><xsd:documentation>An</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="68"><xsd:annotation><xsd:documentation>And</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="69"><xsd:annotation><xsd:documentation>Answer</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="70"><xsd:annotation><xsd:documentation>Any</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="71"><xsd:annotation><xsd:documentation>Are</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="72"><xsd:annotation><xsd:documentation>Area</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="73"><xsd:annotation><xsd:documentation>Arm</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="74"><xsd:annotation><xsd:documentation>Armed</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="75"><xsd:annotation><xsd:documentation>At</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="76"><xsd:annotation><xsd:documentation>Attic</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="77"><xsd:annotation><xsd:documentation>Audio</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="78"><xsd:annotation><xsd:documentation>Auto</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="79"><xsd:annotation><xsd:documentation>Authorized</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="80"><xsd:annotation><xsd:documentation>Automatic</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="81"><xsd:annotation><xsd:documentation>Automation</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="82"><xsd:annotation><xsd:documentation>Auxiliary</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="83"><xsd:annotation><xsd:documentation>Away</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="84"><xsd:annotation><xsd:documentation>B</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="85"><xsd:annotation><xsd:documentation>Back</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="86"><xsd:annotation><xsd:documentation>Barn</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="87"><xsd:annotation><xsd:documentation>Basement</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="88"><xsd:annotation><xsd:documentation>Bathroom</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="89"><xsd:annotation><xsd:documentation>Battery</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="90"><xsd:annotation><xsd:documentation>Bedroom</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="91"><xsd:annotation><xsd:documentation>Been</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="92"><xsd:annotation><xsd:documentation>Bell</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="93"><xsd:annotation><xsd:documentation>Bottom</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="94"><xsd:annotation><xsd:documentation>Break</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="95"><xsd:annotation><xsd:documentation>Breakfast</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="96"><xsd:annotation><xsd:documentation>Bright</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="97"><xsd:annotation><xsd:documentation>Building</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="98"><xsd:annotation><xsd:documentation>Burglar</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="99"><xsd:annotation><xsd:documentation>Button</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="100"><xsd:annotation><xsd:documentation>By</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="101"><xsd:annotation><xsd:documentation>Bypassed</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="102"><xsd:annotation><xsd:documentation>Cabinet</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="103"><xsd:annotation><xsd:documentation>Call</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="104"><xsd:annotation><xsd:documentation>Camera</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="105"><xsd:annotation><xsd:documentation>Cancel</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="106"><xsd:annotation><xsd:documentation>Carbon_monoxide</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="107"><xsd:annotation><xsd:documentation>Card</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="108"><xsd:annotation><xsd:documentation>Center</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="109"><xsd:annotation><xsd:documentation>Central</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="110"><xsd:annotation><xsd:documentation>Change</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="111"><xsd:annotation><xsd:documentation>Check</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="112"><xsd:annotation><xsd:documentation>Chime</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="113"><xsd:annotation><xsd:documentation>Circuit</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="114"><xsd:annotation><xsd:documentation>Clear</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="115"><xsd:annotation><xsd:documentation>Closed</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="116"><xsd:annotation><xsd:documentation>Closet</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="117"><xsd:annotation><xsd:documentation>Code</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="118"><xsd:annotation><xsd:documentation>Cold</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="119"><xsd:annotation><xsd:documentation>Condition</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="120"><xsd:annotation><xsd:documentation>Connect</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="121"><xsd:annotation><xsd:documentation>Control</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="122"><xsd:annotation><xsd:documentation>Cool</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="123"><xsd:annotation><xsd:documentation>Cooling</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="124"><xsd:annotation><xsd:documentation>Corner</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="125"><xsd:annotation><xsd:documentation>Crawlspace</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="126"><xsd:annotation><xsd:documentation>Danger</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="127"><xsd:annotation><xsd:documentation>Day</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="128"><xsd:annotation><xsd:documentation>Deck</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="129"><xsd:annotation><xsd:documentation>Decrease</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="130"><xsd:annotation><xsd:documentation>Defective</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="131"><xsd:annotation><xsd:documentation>Degrees</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="132"><xsd:annotation><xsd:documentation>Delay</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="133"><xsd:annotation><xsd:documentation>Den</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="134"><xsd:annotation><xsd:documentation>Denied</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="135"><xsd:annotation><xsd:documentation>Detected</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="136"><xsd:annotation><xsd:documentation>Detector</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="137"><xsd:annotation><xsd:documentation>Device</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="138"><xsd:annotation><xsd:documentation>Dial</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="139"><xsd:annotation><xsd:documentation>Dialing</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="140"><xsd:annotation><xsd:documentation>Dim</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="141"><xsd:annotation><xsd:documentation>Dining_room</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="142"><xsd:annotation><xsd:documentation>Disable</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="143"><xsd:annotation><xsd:documentation>Disarm</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="144"><xsd:annotation><xsd:documentation>Disarmed</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="145"><xsd:annotation><xsd:documentation>Dock</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="146"><xsd:annotation><xsd:documentation>Door</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="147"><xsd:annotation><xsd:documentation>Doors</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="148"><xsd:annotation><xsd:documentation>Down</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="149"><xsd:annotation><xsd:documentation>Driveway</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="150"><xsd:annotation><xsd:documentation>East</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="151"><xsd:annotation><xsd:documentation>Emergency</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="152"><xsd:annotation><xsd:documentation>Enable</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="153"><xsd:annotation><xsd:documentation>End</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="154"><xsd:annotation><xsd:documentation>Energy</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="155"><xsd:annotation><xsd:documentation>Enrollment</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="156"><xsd:annotation><xsd:documentation>Enter</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="157"><xsd:annotation><xsd:documentation>Entering</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="158"><xsd:annotation><xsd:documentation>Entertainment</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="159"><xsd:annotation><xsd:documentation>Enter_the</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="160"><xsd:annotation><xsd:documentation>Entry</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="161"><xsd:annotation><xsd:documentation>Environment</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="162"><xsd:annotation><xsd:documentation>Equipment</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="163"><xsd:annotation><xsd:documentation>Error</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="164"><xsd:annotation><xsd:documentation>Evacuate</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="165"><xsd:annotation><xsd:documentation>Event</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="166"><xsd:annotation><xsd:documentation>Exercise</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="167"><xsd:annotation><xsd:documentation>Expander</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="168"><xsd:annotation><xsd:documentation>Exit</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="169"><xsd:annotation><xsd:documentation>Exterior</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="170"><xsd:annotation><xsd:documentation>F</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="171"><xsd:annotation><xsd:documentation>Fail</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="172"><xsd:annotation><xsd:documentation>Failure</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="173"><xsd:annotation><xsd:documentation>Family_room</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="174"><xsd:annotation><xsd:documentation>Fan</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="175"><xsd:annotation><xsd:documentation>Feed</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="176"><xsd:annotation><xsd:documentation>Fence</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="177"><xsd:annotation><xsd:documentation>Fire</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="178"><xsd:annotation><xsd:documentation>First</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="179"><xsd:annotation><xsd:documentation>Flood</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="180"><xsd:annotation><xsd:documentation>Floor</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="181"><xsd:annotation><xsd:documentation>Followed</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="182"><xsd:annotation><xsd:documentation>Force</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="183"><xsd:annotation><xsd:documentation>Fountain</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="184"><xsd:annotation><xsd:documentation>Foyer</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="185"><xsd:annotation><xsd:documentation>Freeze</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="186"><xsd:annotation><xsd:documentation>Front</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="187"><xsd:annotation><xsd:documentation>Full</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="188"><xsd:annotation><xsd:documentation>Furnace</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="189"><xsd:annotation><xsd:documentation>Fuse</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="190"><xsd:annotation><xsd:documentation>Game</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="191"><xsd:annotation><xsd:documentation>Garage</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="192"><xsd:annotation><xsd:documentation>Gas</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="193"><xsd:annotation><xsd:documentation>Gate</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="194"><xsd:annotation><xsd:documentation>Glass</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="195"><xsd:annotation><xsd:documentation>Go</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="196"><xsd:annotation><xsd:documentation>Good</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="197"><xsd:annotation><xsd:documentation>Goodbye</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="198"><xsd:annotation><xsd:documentation>Great</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="199"><xsd:annotation><xsd:documentation>Group</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="200"><xsd:annotation><xsd:documentation>Guest</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="201"><xsd:annotation><xsd:documentation>Gun</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="202"><xsd:annotation><xsd:documentation>Hall</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="203"><xsd:annotation><xsd:documentation>Hallway</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="204"><xsd:annotation><xsd:documentation>Hanging_up</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="205"><xsd:annotation><xsd:documentation>Hang_up</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="206"><xsd:annotation><xsd:documentation>Has</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="207"><xsd:annotation><xsd:documentation>Has_Expired</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="208"><xsd:annotation><xsd:documentation>Have</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="209"><xsd:annotation><xsd:documentation>Hear_menu_options</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="210"><xsd:annotation><xsd:documentation>Heat</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="211"><xsd:annotation><xsd:documentation>Help</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="212"><xsd:annotation><xsd:documentation>High</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="213"><xsd:annotation><xsd:documentation>Hold</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="214"><xsd:annotation><xsd:documentation>Home</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="215"><xsd:annotation><xsd:documentation>Hot</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="216"><xsd:annotation><xsd:documentation>Hottub</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="217"><xsd:annotation><xsd:documentation>House</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="218"><xsd:annotation><xsd:documentation>Humidity</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="219"><xsd:annotation><xsd:documentation>HVAC</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="220"><xsd:annotation><xsd:documentation>If</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="221"><xsd:annotation><xsd:documentation>Immediately</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="222"><xsd:annotation><xsd:documentation>In</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="223"><xsd:annotation><xsd:documentation>Inches</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="224"><xsd:annotation><xsd:documentation>Increase</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="225"><xsd:annotation><xsd:documentation>Inner</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="226"><xsd:annotation><xsd:documentation>Input</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="227"><xsd:annotation><xsd:documentation>Inside</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="228"><xsd:annotation><xsd:documentation>Instant</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="229"><xsd:annotation><xsd:documentation>Interior</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="230"><xsd:annotation><xsd:documentation>In_The</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="231"><xsd:annotation><xsd:documentation>Intruder</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="232"><xsd:annotation><xsd:documentation>Intrusion</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="233"><xsd:annotation><xsd:documentation>Invalid</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="234"><xsd:annotation><xsd:documentation>Is</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="235"><xsd:annotation><xsd:documentation>Is_about_to_expire</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="236"><xsd:annotation><xsd:documentation>Is_active</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="237"><xsd:annotation><xsd:documentation>Is_armed</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="238"><xsd:annotation><xsd:documentation>Is_canceled</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="239"><xsd:annotation><xsd:documentation>Is_closed</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="240"><xsd:annotation><xsd:documentation>Is_disarmed</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="241"><xsd:annotation><xsd:documentation>Is_low</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="242"><xsd:annotation><xsd:documentation>Is_off</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="243"><xsd:annotation><xsd:documentation>Is_OK</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="244"><xsd:annotation><xsd:documentation>Is_on</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="245"><xsd:annotation><xsd:documentation>Is_open</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="246"><xsd:annotation><xsd:documentation>Jacuzzi</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="247"><xsd:annotation><xsd:documentation>Jewelry</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="248"><xsd:annotation><xsd:documentation>Keep</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="249"><xsd:annotation><xsd:documentation>Key</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="250"><xsd:annotation><xsd:documentation>Keypad</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="251"><xsd:annotation><xsd:documentation>Kitchen</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="252"><xsd:annotation><xsd:documentation>Lamp</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="253"><xsd:annotation><xsd:documentation>Laundry</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="254"><xsd:annotation><xsd:documentation>Lawn</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="255"><xsd:annotation><xsd:documentation>Leak</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="256"><xsd:annotation><xsd:documentation>Leave</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="257"><xsd:annotation><xsd:documentation>Left</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="258"><xsd:annotation><xsd:documentation>Less</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="259"><xsd:annotation><xsd:documentation>Level</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="260"><xsd:annotation><xsd:documentation>Library</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="261"><xsd:annotation><xsd:documentation>Light</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="262"><xsd:annotation><xsd:documentation>Lights</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="263"><xsd:annotation><xsd:documentation>Line</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="264"><xsd:annotation><xsd:documentation>Living_room</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="265"><xsd:annotation><xsd:documentation>Loading</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="266"><xsd:annotation><xsd:documentation>Lobby</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="267"><xsd:annotation><xsd:documentation>Location</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="268"><xsd:annotation><xsd:documentation>Lock</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="269"><xsd:annotation><xsd:documentation>Low</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="270"><xsd:annotation><xsd:documentation>Lower</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="271"><xsd:annotation><xsd:documentation>M</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="272"><xsd:annotation><xsd:documentation>Machine</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="273"><xsd:annotation><xsd:documentation>Mail</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="274"><xsd:annotation><xsd:documentation>Main</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="275"><xsd:annotation><xsd:documentation>Mains</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="276"><xsd:annotation><xsd:documentation>Manual</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="277"><xsd:annotation><xsd:documentation>Master</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="278"><xsd:annotation><xsd:documentation>Max</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="279"><xsd:annotation><xsd:documentation>Media</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="280"><xsd:annotation><xsd:documentation>Medical</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="281"><xsd:annotation><xsd:documentation>Medicine</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="282"><xsd:annotation><xsd:documentation>Memory</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="283"><xsd:annotation><xsd:documentation>Menu</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="284"><xsd:annotation><xsd:documentation>Message</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="285"><xsd:annotation><xsd:documentation>Middle</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="286"><xsd:annotation><xsd:documentation>Minute</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="287"><xsd:annotation><xsd:documentation>Missing</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="288"><xsd:annotation><xsd:documentation>Mode</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="289"><xsd:annotation><xsd:documentation>Module</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="290"><xsd:annotation><xsd:documentation>Monitor</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="291"><xsd:annotation><xsd:documentation>More</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="292"><xsd:annotation><xsd:documentation>Motion</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="293"><xsd:annotation><xsd:documentation>Motor</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="294"><xsd:annotation><xsd:documentation>Next</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="295"><xsd:annotation><xsd:documentation>Night</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="296"><xsd:annotation><xsd:documentation>No</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="297"><xsd:annotation><xsd:documentation>Normal</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="298"><xsd:annotation><xsd:documentation>North</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="299"><xsd:annotation><xsd:documentation>Not</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="300"><xsd:annotation><xsd:documentation>Notified</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="301"><xsd:annotation><xsd:documentation>Now</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="302"><xsd:annotation><xsd:documentation>Number</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="303"><xsd:annotation><xsd:documentation>Nursery</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="304"><xsd:annotation><xsd:documentation>Of</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="305"><xsd:annotation><xsd:documentation>Off</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="306"><xsd:annotation><xsd:documentation>Office</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="307"><xsd:annotation><xsd:documentation>Oh</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="308"><xsd:annotation><xsd:documentation>OK</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="309"><xsd:annotation><xsd:documentation>On</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="310"><xsd:annotation><xsd:documentation>Online</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="311"><xsd:annotation><xsd:documentation>Only</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="312"><xsd:annotation><xsd:documentation>Open</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="313"><xsd:annotation><xsd:documentation>Operating</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="314"><xsd:annotation><xsd:documentation>Option</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="315"><xsd:annotation><xsd:documentation>Or</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="316"><xsd:annotation><xsd:documentation>Other</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="317"><xsd:annotation><xsd:documentation>Out</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="318"><xsd:annotation><xsd:documentation>Outlet</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="319"><xsd:annotation><xsd:documentation>Output</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="320"><xsd:annotation><xsd:documentation>Outside</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="321"><xsd:annotation><xsd:documentation>Over</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="322"><xsd:annotation><xsd:documentation>Overhead</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="323"><xsd:annotation><xsd:documentation>Panel</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="324"><xsd:annotation><xsd:documentation>Panic</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="325"><xsd:annotation><xsd:documentation>Parking</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="326"><xsd:annotation><xsd:documentation>Partition</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="327"><xsd:annotation><xsd:documentation>Patio</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="328"><xsd:annotation><xsd:documentation>Pause</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="329"><xsd:annotation><xsd:documentation>Perimeter</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="330"><xsd:annotation><xsd:documentation>Personal</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="331"><xsd:annotation><xsd:documentation>Phone</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="332"><xsd:annotation><xsd:documentation>Place</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="333"><xsd:annotation><xsd:documentation>Play</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="334"><xsd:annotation><xsd:documentation>Please</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="335"><xsd:annotation><xsd:documentation>Plus</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="336"><xsd:annotation><xsd:documentation>PM</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="337"><xsd:annotation><xsd:documentation>Police</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="338"><xsd:annotation><xsd:documentation>Pool</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="339"><xsd:annotation><xsd:documentation>Porch</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="340"><xsd:annotation><xsd:documentation>Port</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="341"><xsd:annotation><xsd:documentation>Pound</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="342"><xsd:annotation><xsd:documentation>Pounds</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="343"><xsd:annotation><xsd:documentation>Power</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="344"><xsd:annotation><xsd:documentation>Press</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="345"><xsd:annotation><xsd:documentation>Pressure</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="346"><xsd:annotation><xsd:documentation>Problem</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="347"><xsd:annotation><xsd:documentation>Program</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="348"><xsd:annotation><xsd:documentation>Protected</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="349"><xsd:annotation><xsd:documentation>Pump</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="350"><xsd:annotation><xsd:documentation>Radio</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="351"><xsd:annotation><xsd:documentation>Raise</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="352"><xsd:annotation><xsd:documentation>Ready</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="353"><xsd:annotation><xsd:documentation>Rear</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="354"><xsd:annotation><xsd:documentation>Receiver</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="355"><xsd:annotation><xsd:documentation>Record</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="356"><xsd:annotation><xsd:documentation>Recreation</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="357"><xsd:annotation><xsd:documentation>Relay</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="358"><xsd:annotation><xsd:documentation>Remain_calm</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="359"><xsd:annotation><xsd:documentation>Remote</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="360"><xsd:annotation><xsd:documentation>Repeat</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="361"><xsd:annotation><xsd:documentation>Report</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="362"><xsd:annotation><xsd:documentation>Reporting</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="363"><xsd:annotation><xsd:documentation>Reset</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="364"><xsd:annotation><xsd:documentation>Restored</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="365"><xsd:annotation><xsd:documentation>Return</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="366"><xsd:annotation><xsd:documentation>Right</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="367"><xsd:annotation><xsd:documentation>Roof</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="368"><xsd:annotation><xsd:documentation>Room</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="369"><xsd:annotation><xsd:documentation>Running</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="370"><xsd:annotation><xsd:documentation>Safe</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="371"><xsd:annotation><xsd:documentation>Save</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="372"><xsd:annotation><xsd:documentation>Screen</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="373"><xsd:annotation><xsd:documentation>Second</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="374"><xsd:annotation><xsd:documentation>Secure</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="375"><xsd:annotation><xsd:documentation>Security</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="376"><xsd:annotation><xsd:documentation>Select</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="377"><xsd:annotation><xsd:documentation>Sensor</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="378"><xsd:annotation><xsd:documentation>Serial</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="379"><xsd:annotation><xsd:documentation>Service</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="380"><xsd:annotation><xsd:documentation>Set</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="381"><xsd:annotation><xsd:documentation>Setback</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="382"><xsd:annotation><xsd:documentation>Setpoint</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="383"><xsd:annotation><xsd:documentation>Setting</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="384"><xsd:annotation><xsd:documentation>Shed</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="385"><xsd:annotation><xsd:documentation>Shipping</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="386"><xsd:annotation><xsd:documentation>Shock</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="387"><xsd:annotation><xsd:documentation>Shop</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="388"><xsd:annotation><xsd:documentation>Shorted</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="389"><xsd:annotation><xsd:documentation>Shunted</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="390"><xsd:annotation><xsd:documentation>Side</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="391"><xsd:annotation><xsd:documentation>Silence</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="392"><xsd:annotation><xsd:documentation>Siren</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="393"><xsd:annotation><xsd:documentation>Sliding</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="394"><xsd:annotation><xsd:documentation>Smoke</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="395"><xsd:annotation><xsd:documentation>Someone</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="396"><xsd:annotation><xsd:documentation>South</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="397"><xsd:annotation><xsd:documentation>Spare</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="398"><xsd:annotation><xsd:documentation>Speaker</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="399"><xsd:annotation><xsd:documentation>Sprinkler</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="400"><xsd:annotation><xsd:documentation>Stairs</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="401"><xsd:annotation><xsd:documentation>Stairway</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="402"><xsd:annotation><xsd:documentation>Star</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="403"><xsd:annotation><xsd:documentation>Start</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="404"><xsd:annotation><xsd:documentation>Status</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="405"><xsd:annotation><xsd:documentation>Stay</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="406"><xsd:annotation><xsd:documentation>Stock</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="407"><xsd:annotation><xsd:documentation>Stop</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="408"><xsd:annotation><xsd:documentation>Storage</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="409"><xsd:annotation><xsd:documentation>Storm</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="410"><xsd:annotation><xsd:documentation>Studio</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="411"><xsd:annotation><xsd:documentation>Study</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="412"><xsd:annotation><xsd:documentation>Sump</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="413"><xsd:annotation><xsd:documentation>Sun</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="414"><xsd:annotation><xsd:documentation>Switch</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="415"><xsd:annotation><xsd:documentation>System</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="416"><xsd:annotation><xsd:documentation>Tamper</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="417"><xsd:annotation><xsd:documentation>Tank</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="418"><xsd:annotation><xsd:documentation>Task</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="419"><xsd:annotation><xsd:documentation>Telephone</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="420"><xsd:annotation><xsd:documentation>Television</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="421"><xsd:annotation><xsd:documentation>Temperature</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="422"><xsd:annotation><xsd:documentation>Test</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="423"><xsd:annotation><xsd:documentation>Thank_you</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="424"><xsd:annotation><xsd:documentation>That</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="425"><xsd:annotation><xsd:documentation>The</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="426"><xsd:annotation><xsd:documentation>Theater</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="427"><xsd:annotation><xsd:documentation>Thermostat</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="428"><xsd:annotation><xsd:documentation>Third</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="429"><xsd:annotation><xsd:documentation>Time</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="430"><xsd:annotation><xsd:documentation>Toggle</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="431"><xsd:annotation><xsd:documentation>Top</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="432"><xsd:annotation><xsd:documentation>Transformer</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="433"><xsd:annotation><xsd:documentation>Transmitter</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="434"><xsd:annotation><xsd:documentation>Trespassing</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="435"><xsd:annotation><xsd:documentation>Trouble</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="436"><xsd:annotation><xsd:documentation>Turn</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="437"><xsd:annotation><xsd:documentation>Twice</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="438"><xsd:annotation><xsd:documentation>Type</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="439"><xsd:annotation><xsd:documentation>Under</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="440"><xsd:annotation><xsd:documentation>Unit</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="441"><xsd:annotation><xsd:documentation>Unlocked</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="442"><xsd:annotation><xsd:documentation>Unoccupied</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="443"><xsd:annotation><xsd:documentation>Up</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="444"><xsd:annotation><xsd:documentation>User</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="445"><xsd:annotation><xsd:documentation>Utility</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="446"><xsd:annotation><xsd:documentation>Vacation</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="447"><xsd:annotation><xsd:documentation>Valve</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="448"><xsd:annotation><xsd:documentation>Video</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="449"><xsd:annotation><xsd:documentation>Violated</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="450"><xsd:annotation><xsd:documentation>Visitor</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="451"><xsd:annotation><xsd:documentation>Wake_up</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="452"><xsd:annotation><xsd:documentation>Walk</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="453"><xsd:annotation><xsd:documentation>Wall</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="454"><xsd:annotation><xsd:documentation>Warehouse</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="455"><xsd:annotation><xsd:documentation>Warning</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="456"><xsd:annotation><xsd:documentation>Water</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="457"><xsd:annotation><xsd:documentation>Way</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="458"><xsd:annotation><xsd:documentation>Welcome</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="459"><xsd:annotation><xsd:documentation>West</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="460"><xsd:annotation><xsd:documentation>What</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="461"><xsd:annotation><xsd:documentation>When</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="462"><xsd:annotation><xsd:documentation>Where</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="463"><xsd:annotation><xsd:documentation>Will</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="464"><xsd:annotation><xsd:documentation>Window</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="465"><xsd:annotation><xsd:documentation>Windows</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="466"><xsd:annotation><xsd:documentation>With</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="467"><xsd:annotation><xsd:documentation>Work</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="468"><xsd:annotation><xsd:documentation>Yard</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="469"><xsd:annotation><xsd:documentation>Year</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="470"><xsd:annotation><xsd:documentation>You</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="471"><xsd:annotation><xsd:documentation>Zone</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="472"><xsd:annotation><xsd:documentation>Zones</xsd:documentation></xsd:annotation></xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="SpeakPhraseZones">
+		<xsd:annotation>
+			<xsd:documentation>
+				Speak Phrase for zones 1 to 208 (i.e. "Zone 1", "Zone 2", ... "Zone 208")
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">
+			<xsd:minInclusive value="1"/>
+      		<xsd:maxInclusive value="208"/>	
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="SpeakPhraseLiterals">
+		<xsd:annotation>
+			<xsd:documentation>
+				A predefined Phrase that can be spoken by the ELK 
+				system
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">	
+			<xsd:enumeration value="209"><xsd:annotation><xsd:documentation>Keypad Panic Alarm </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="210"><xsd:annotation><xsd:documentation>AC Power Failure </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="211"><xsd:annotation><xsd:documentation>Telephone Line Trouble </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="212"><xsd:annotation><xsd:documentation>Alarm Silence </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="213"><xsd:annotation><xsd:documentation>Alarm Acknowledged </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="214"><xsd:annotation><xsd:documentation>(Area X) Is Armed Away Mode </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="215"><xsd:annotation><xsd:documentation>(Area X) Is Armed Stay Mode </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="216"><xsd:annotation><xsd:documentation>(Area X) Is Armed Stay Instant </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="217"><xsd:annotation><xsd:documentation>(Area X) Is Armed Night Mode </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="218"><xsd:annotation><xsd:documentation>(Area X) Is Armed Night Instant </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="219"><xsd:annotation><xsd:documentation>(Area X) Is Armed Vacation Mode </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="220"><xsd:annotation><xsd:documentation>(Area X) Exit Delay Is About To Expire </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="221"><xsd:annotation><xsd:documentation>Auto Arm In 1 Minute </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="222"><xsd:annotation><xsd:documentation>Exit Error </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="223"><xsd:annotation><xsd:documentation>Closing Ring Back </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="224"><xsd:annotation><xsd:documentation>Audio Module Missing </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="225"><xsd:annotation><xsd:documentation>System Is Armed </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="226"><xsd:annotation><xsd:documentation>(Area X) Is Disarmed </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="227"><xsd:annotation><xsd:documentation>Input Expander Missing </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="228"><xsd:annotation><xsd:documentation>Keypad Missing </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="229"><xsd:annotation><xsd:documentation>No Zones Violated </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="230"><xsd:annotation><xsd:documentation>Output Expander Missing </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="231"><xsd:annotation><xsd:documentation>Welcome System Is On </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="232"><xsd:annotation><xsd:documentation>Start Module Enrollment </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="233"><xsd:annotation><xsd:documentation>Stop Module Enrollment </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="234"><xsd:annotation><xsd:documentation>System Battery Is Low </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="235"><xsd:annotation><xsd:documentation>Press Transmitter Button </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="236"><xsd:annotation><xsd:documentation>Receiver Program Invalid </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="237"><xsd:annotation><xsd:documentation>Test Volume </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="238"><xsd:annotation><xsd:documentation>Say Time </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="239"><xsd:annotation><xsd:documentation>Miscellaneous 1 </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="240"><xsd:annotation><xsd:documentation>Miscellaneous 2 </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="241"><xsd:annotation><xsd:documentation>Miscellaneous 3 </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="242"><xsd:annotation><xsd:documentation>Miscellaneous 4 </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="243"><xsd:annotation><xsd:documentation>Miscellaneous 5 </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="244"><xsd:annotation><xsd:documentation>Miscellaneous 6 </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="245"><xsd:annotation><xsd:documentation>Miscellaneous 7 </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="246"><xsd:annotation><xsd:documentation>Miscellaneous 8 </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="247"><xsd:annotation><xsd:documentation>Miscellaneous 9 </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="248"><xsd:annotation><xsd:documentation>Miscellaneous 10 </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="249"><xsd:annotation><xsd:documentation>Enter Pass Code </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="250"><xsd:annotation><xsd:documentation>Access Allowed </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="251"><xsd:annotation><xsd:documentation>System Not Ready </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="252"><xsd:annotation><xsd:documentation>Select Task Number </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="253"><xsd:annotation><xsd:documentation>Select Light Number </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="254"><xsd:annotation><xsd:documentation>Select Output Number </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="255"><xsd:annotation><xsd:documentation>Select Temperature Sensor </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="256"><xsd:annotation><xsd:documentation>Select Keypad Number </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="257"><xsd:annotation><xsd:documentation>Select Thermostat Number </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="258"><xsd:annotation><xsd:documentation>Press To Change </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="259"><xsd:annotation><xsd:documentation>Press To End Message </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="260"><xsd:annotation><xsd:documentation>Phone Menu 0 - Hear Menu Options </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="261"><xsd:annotation><xsd:documentation>Phone Menu 1 - Arm/Disarm Status </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="262"><xsd:annotation><xsd:documentation>Phone Menu 2 - Automation Control </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="263"><xsd:annotation><xsd:documentation>Automation Menu 1 - Automation Task </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="264"><xsd:annotation><xsd:documentation>Automation Menu 2 - Lighting Control </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="265"><xsd:annotation><xsd:documentation>Automation Menu 3 - Output Control </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="266"><xsd:annotation><xsd:documentation>Automation Menu 4 - Temperature Sensor </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="267"><xsd:annotation><xsd:documentation>Automation Menu 5 - Keypad Temperature </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="268"><xsd:annotation><xsd:documentation>Automation Menu 6 - Thermostat Temperature </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="269"><xsd:annotation><xsd:documentation>Phone Menu 3 - System Summary </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="270"><xsd:annotation><xsd:documentation>Phone Menu 4 - Zone Status </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="271"><xsd:annotation><xsd:documentation>Phone Menu 7 - Page </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="272"><xsd:annotation><xsd:documentation>Phone Menu 8 - Adjust Volume </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="273"><xsd:annotation><xsd:documentation>Phone Menu 9 - Exit and Hangup </xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="274"><xsd:annotation><xsd:documentation>Phone Arming </xsd:documentation></xsd:annotation></xsd:enumeration>	
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="SpeakPhraseType">
+		<xsd:union memberTypes="uelk:SpeakPhraseZones uelk:SpeakPhraseLiterals"/>
+	</xsd:simpleType>
+	
+		<!-- Objects used in Topology and Config -->
+	<xsd:complexType name="Zone">
+		<xsd:annotation>
+			<xsd:documentation>
+				Defines a Zone
+		 	</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="id" type="uelk:ZoneIDType" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+		 			id: a number between 1-208	
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="name" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					name of the zone
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="alarmDef" type="uelk:AlarmDefinitionType" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					The alarm definition
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	
+	<xsd:complexType name="KeypadFuncKey">
+		<xsd:annotation>
+			<xsd:documentation>
+				Defines a function key 
+		 	</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="id" type="uelk:FunctionKeyType" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+		 			id: the function key id	
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="name" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					name of the function key
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	
+	<xsd:complexType name="Keypad">
+		<xsd:annotation>
+			<xsd:documentation>
+				Defines a Keypad 
+		 	</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="key" type="uelk:KeypadFuncKey" minOccurs="1" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="id" type="uelk:KeypadType" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					A number from 1 to 8
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="name" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					The name of the keypad
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	
+	<xsd:complexType name="Area">
+		<xsd:annotation>
+			<xsd:documentation>
+				Defines an Area 
+		 	</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="zone" type="uelk:Zone" minOccurs="0" maxOccurs="10"/>
+			<xsd:element name="keypad" type="uelk:Keypad" minOccurs="0" maxOccurs="10"/>
+		</xsd:sequence>
+		<xsd:attribute name="id" type="uelk:AreaIDType" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					The id for the specific area
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="name" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					The name of the area
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	
+	<xsd:complexType name="Areas">
+		<xsd:annotation>
+			<xsd:documentation>
+				A collection of Area(s)
+		 	</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="area" type="uelk:Area" minOccurs="0" maxOccurs="208"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="Output">
+		<xsd:annotation>
+			<xsd:documentation>
+				Defines an Output 
+		 	</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="id" type="uelk:OutputIDType" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					The id of the output a number from 1-208
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="name" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					The name of the output
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	
+	<xsd:complexType name="Outputs">
+		<xsd:annotation>
+			<xsd:documentation>
+				A collection of Output(s)
+		 	</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="output" type="uelk:Output" minOccurs="1" maxOccurs="208"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="Thermostat">
+      <xsd:annotation>
+         <xsd:documentation>
+            Defines a Thermostat 
+         </xsd:documentation>
+      </xsd:annotation>
+      <xsd:attribute name="id" type="uelk:ThermostatIDType" use="required">
+         <xsd:annotation>
+            <xsd:documentation>
+               The id of the thermostat a number from 1-16
+            </xsd:documentation>
+         </xsd:annotation>
+      </xsd:attribute>
+      <xsd:attribute name="name" type="xsd:string" use="required">
+         <xsd:annotation>
+            <xsd:documentation>
+               The name of the thermostat
+            </xsd:documentation>
+         </xsd:annotation>
+      </xsd:attribute>
+   </xsd:complexType>
+   
+   <xsd:complexType name="Thermostats">
+      <xsd:annotation>
+         <xsd:documentation>
+            A collection of Thermostat(s)
+         </xsd:documentation>
+      </xsd:annotation>
+      <xsd:sequence>
+         <xsd:element name="tstat" type="uelk:Thermostat" minOccurs="1" maxOccurs="16"/>
+      </xsd:sequence>
+   </xsd:complexType>
+   
+	<xsd:complexType name="AudioZone">
+		<xsd:annotation>
+			<xsd:documentation>
+				Defines an Audio Zone 
+		 	</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="id" type="uelk:AudioZoneIDType" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					The id of the audio zone
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="name" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					The name of the audio zone 
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	
+	<xsd:complexType name="AudioZones">
+		<xsd:annotation>
+			<xsd:documentation>
+				A collection of AudioZone(s)
+		 	</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="audioZone" type="uelk:AudioZone" minOccurs="1" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="AudioSource">
+		<xsd:annotation>
+			<xsd:documentation>
+				Defines an Audio Source
+		 	</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="id" type="uelk:AudioSourceType" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					The id of the audio source
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="name" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					The name of the audio source 
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	
+	<xsd:complexType name="AudioSources">
+		<xsd:annotation>
+			<xsd:documentation>
+				A collection of AudioSource(s)
+		 	</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="audioSource" type="uelk:AudioSource" minOccurs="1" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="Audio">
+		<xsd:annotation>
+			<xsd:documentation>
+				Audio configuration
+		 	</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="audioZones" type="uelk:AudioZones" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="audioSources" type="uelk:AudioSources" minOccurs="0" maxOccurs="1"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="Topology">
+		<xsd:annotation>
+			<xsd:documentation>
+				Complete topology/configuration for the ELK System
+		 	</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="areas" type="uelk:Areas" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="outputs" type="uelk:Outputs" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="tstats" type="uelk:Thermostats" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="audio" type="uelk:Audio" minOccurs="0" maxOccurs="1"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="ELKConfig">
+		<xsd:annotation>
+			<xsd:documentation>
+				Defines the runtime configuration parameters for ELK
+		 	</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="Enabeld" type="xsd:boolean" minOccurs="1" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>
+						Whether or ELK service is enabled
+				 	</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="IP" type="xsd:string" minOccurs="1" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>
+						The IP of M1XEP	
+				 	</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Port" type="xsd:int" minOccurs="1" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>
+						The Port of M1XEP	
+				 	</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="SCode" type="xsd:string" minOccurs="1" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>
+						The 4 or 6 digit Access/Security Code	
+				 	</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="DisableML" type="xsd:boolean" minOccurs="1" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>
+						Whether or not to ignore All On/Off commands	
+				 	</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="SSL" type="xsd:boolean" minOccurs="1" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation>
+						Whether or not to we should use SSL	
+				 	</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+		
+	<!-- Event Definitions -->
+	<xsd:simpleType name="ELKAction">
+		<xsd:annotation>
+			<xsd:documentation>
+				Actions relating to ELK Control 
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="1">
+				<xsd:annotation>
+					<xsd:documentation>
+						Topology has changed so the clients must refresh. 
+					</xsd:documentation>	
+				</xsd:annotation>	
+			</xsd:enumeration>
+			<xsd:enumeration value="2">
+				<xsd:annotation>
+					<xsd:documentation>
+						Area Event: 
+						Something in the Area has changed. 
+						See AreaEvent for sub-types.
+					</xsd:documentation>	
+				</xsd:annotation>	
+			</xsd:enumeration>
+			<xsd:enumeration value="3">
+				<xsd:annotation>
+					<xsd:documentation>
+						Zone Event: 
+						Something in the Zone has changed. 
+						See ZoneEvent for sub-types.
+					</xsd:documentation>	
+				</xsd:annotation>	
+			</xsd:enumeration>
+			<xsd:enumeration value="4">
+				<xsd:annotation>
+					<xsd:documentation>
+						Keypad Event: 
+						Something has happened on a keypad.
+						See KeypadEvent for sub-types.
+					</xsd:documentation>	
+				</xsd:annotation>	
+			</xsd:enumeration>
+			<xsd:enumeration value="5">
+				<xsd:annotation>
+					<xsd:documentation>
+						Output Event: 
+						Something has happened on an Output.
+						See OutputEvent for sub-types.
+					</xsd:documentation>	
+				</xsd:annotation>	
+			</xsd:enumeration>
+			<xsd:enumeration value="6">
+				<xsd:annotation>
+					<xsd:documentation>
+						System Event:
+						Whether or not the module is enabled or if
+						ISY is currently connected to ELK.
+						See SystemEvent for syb-types.
+					</xsd:documentation>	
+				</xsd:annotation>	
+			</xsd:enumeration>
+			<xsd:enumeration value="7">
+				<xsd:annotation>
+					<xsd:documentation>
+						Thermostat Event:
+						Events associated with change of state for a
+						given thermostat.
+						See ThermostatEvent for syb-types.
+					</xsd:documentation>	
+				</xsd:annotation>	
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="ArmUpState">
+		<xsd:annotation>
+			<xsd:documentation>
+				Enumeration of possible values for Arm Up		
+			</xsd:documentation>	
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">
+			<xsd:enumeration value="0"><xsd:annotation><xsd:documentation>Not Ready To Arm</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="1"><xsd:annotation><xsd:documentation>Ready To Arm</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="2"><xsd:annotation><xsd:documentation>Ready To Arm w/ Zone Violated</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="3"><xsd:annotation><xsd:documentation>Armed with Exit Timer</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="4"><xsd:annotation><xsd:documentation>Armed Fully</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="5"><xsd:annotation><xsd:documentation>Force Armed w/ Zone Violated</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="6"><xsd:annotation><xsd:documentation>Armed with Bypass</xsd:documentation></xsd:annotation></xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="ArmedState">
+		<xsd:annotation>
+			<xsd:documentation>
+				Enumeration of possible values for Armed		
+			</xsd:documentation>	
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">	
+			<xsd:enumeration value="0"><xsd:annotation><xsd:documentation>Disarmed</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="1"><xsd:annotation><xsd:documentation>Armed Away</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="2"><xsd:annotation><xsd:documentation>Armed Stay</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="3"><xsd:annotation><xsd:documentation>Armed Stay Instant</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="4"><xsd:annotation><xsd:documentation>Armed Night</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="5"><xsd:annotation><xsd:documentation>Armed Night Instant</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="6"><xsd:annotation><xsd:documentation>Armed Vacation</xsd:documentation></xsd:annotation></xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="AlarmState">
+		<xsd:annotation>
+			<xsd:documentation>
+				Enumeration of possible states for Alarm		
+			</xsd:documentation>	
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">
+			<xsd:enumeration value="0"><xsd:annotation><xsd:documentation>No Alarm Active</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="1"><xsd:annotation><xsd:documentation>Entrance Delay Active</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="2"><xsd:annotation><xsd:documentation>Alarm Abort Delay Active</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="3"><xsd:annotation><xsd:documentation>Fire Alarm</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="4"><xsd:annotation><xsd:documentation>Medical Alarm</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="5"><xsd:annotation><xsd:documentation>Police Alarm</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="6"><xsd:annotation><xsd:documentation>Burglar Alarm</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="7"><xsd:annotation><xsd:documentation>Aux 1 Alarm</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="8"><xsd:annotation><xsd:documentation>Aux 2 Alarm</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="9"><xsd:annotation><xsd:documentation>Aux 3 Alarm</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="10"><xsd:annotation><xsd:documentation>Aux 4 Alarm</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="11"><xsd:annotation><xsd:documentation>Carbon Monoxide Alarm</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="12"><xsd:annotation><xsd:documentation>Emergency Alarm</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="13"><xsd:annotation><xsd:documentation>Freezer Alarm</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="14"><xsd:annotation><xsd:documentation>Gas Alarm</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="15"><xsd:annotation><xsd:documentation>Heat Alarm</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="16"><xsd:annotation><xsd:documentation>Water Alarm</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="17"><xsd:annotation><xsd:documentation>Fire Supervisory</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="18"><xsd:annotation><xsd:documentation>Verify Fire</xsd:documentation></xsd:annotation></xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="AreaEventValues">
+		<xsd:union memberTypes="uelk:ArmUpState uelk:ArmedState uelk:AlarmState"/>
+	</xsd:simpleType>
+	
+	
+	<xsd:simpleType name="AreaEvent">
+		<xsd:annotation>
+			<xsd:documentation>
+				Events relating to AreaAction:
+				ELKAction = 2
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="1">
+				<xsd:annotation>
+					<xsd:documentation>
+						Alarm State
+						For values, see AlarmState
+					</xsd:documentation>	
+				</xsd:annotation>	
+			</xsd:enumeration>
+			<xsd:enumeration value="2">
+				<xsd:annotation>
+					<xsd:documentation>
+						Arm Up State
+						For values, see ArmUpState
+					</xsd:documentation>	
+				</xsd:annotation>	
+			</xsd:enumeration>
+			<xsd:enumeration value="3">
+				<xsd:annotation>
+					<xsd:documentation>
+						Armed State
+						For values, see ArmedState
+					</xsd:documentation>	
+				</xsd:annotation>	
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="LogicalZoneState">
+		<xsd:annotation>
+			<xsd:documentation>
+				Enumeration of possible values for Logical Zone State	
+			</xsd:documentation>	
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">	
+			<xsd:enumeration value="0"><xsd:annotation><xsd:documentation>Normal</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="1"><xsd:annotation><xsd:documentation>Trouble</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="2"><xsd:annotation><xsd:documentation>Violated</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="3"><xsd:annotation><xsd:documentation>Bypassed</xsd:documentation></xsd:annotation></xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="PhysicalZoneState">
+		<xsd:annotation>
+			<xsd:documentation>
+				Enumeration of possible values for Physical Zone State
+			</xsd:documentation>	
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">	
+			<xsd:enumeration value="0"><xsd:annotation><xsd:documentation>Not Configured</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="1"><xsd:annotation><xsd:documentation>Open</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="2"><xsd:annotation><xsd:documentation>EOL</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="3"><xsd:annotation><xsd:documentation>Short</xsd:documentation></xsd:annotation></xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="ZoneVoltageState">
+		<xsd:annotation>
+			<xsd:documentation>
+				Defined in decivolts (10 decivolts = 1 volt)
+			</xsd:documentation>	
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int"/>	
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="ZoneTemperatureState">
+		<xsd:annotation>
+			<xsd:documentation>
+				Temperatures are between -60 to 150 Fahr. This includes:
+				Temperature and Heat/Cool Setpoints.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">
+			<xsd:minInclusive value="-60"/>
+      		<xsd:maxInclusive value="150"/>	
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="ZoneEventValues">
+		<xsd:union memberTypes="uelk:LogicalZoneState uelk:PhysicalZoneState uelk:ZoneVoltageState uelk:ZoneTemperatureState"/>
+	</xsd:simpleType>
+	
+	
+	<xsd:simpleType name="ZoneEvent">
+		<xsd:annotation>
+			<xsd:documentation>
+				Events relating to ZoneAction:
+				ELKAction = 3
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="51">
+				<xsd:annotation>
+					<xsd:documentation>
+						Logical Status for a Zone
+						For values, see LogicalZoneState
+					</xsd:documentation>	
+				</xsd:annotation>	
+			</xsd:enumeration>
+			<xsd:enumeration value="52">
+				<xsd:annotation>
+					<xsd:documentation>
+						Physical Status for a Zone
+						For values, see PhysicalZoneState
+					</xsd:documentation>	
+				</xsd:annotation>	
+			</xsd:enumeration>
+			<xsd:enumeration value="53">
+				<xsd:annotation>
+					<xsd:documentation>
+						Zone Voltage in Decivolts
+						For values, see ZoneVoltageState
+					</xsd:documentation>	
+				</xsd:annotation>	
+			</xsd:enumeration>
+			<xsd:enumeration value="56">
+				<xsd:annotation>
+					<xsd:documentation>
+						Zone Event Temperature
+						For values, see ZoneTemperatureState
+					</xsd:documentation>	
+				</xsd:annotation>	
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="KeypadAccessCodeState">
+		<xsd:annotation>
+			<xsd:documentation>
+				Enumeration of possible values for when an Access Code is entered 
+			</xsd:documentation>	
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">	
+			<xsd:enumeration value="0"><xsd:annotation><xsd:documentation>Access Code Invalid</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="1"><xsd:annotation><xsd:documentation>Access Code Valid</xsd:documentation></xsd:annotation></xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="KeypadLEDState">
+		<xsd:annotation>
+			<xsd:documentation>
+				Enumeration of possible values for a Keypad's LED 
+			</xsd:documentation>	
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">	
+			<xsd:enumeration value="0"><xsd:annotation><xsd:documentation>Off</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="1"><xsd:annotation><xsd:documentation>On</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="2"><xsd:annotation><xsd:documentation>Blinking</xsd:documentation></xsd:annotation></xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="KeypadButtonPressState">
+		<xsd:annotation>
+			<xsd:documentation>
+				Button Press
+			</xsd:documentation>	
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">	
+			<xsd:enumeration value="1"><xsd:annotation><xsd:documentation>On</xsd:documentation></xsd:annotation></xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="KeypadTemperatureState">
+		<xsd:annotation>
+			<xsd:documentation>
+				Temperature sensor on a keypad
+				Temperatures are between -40 to 150 Fahr. This includes:
+				Temperature and Heat/Cool Setpoints.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">
+			<xsd:minInclusive value="-60"/>
+      		<xsd:maxInclusive value="150"/>	
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="KeypadEventValues">
+		<xsd:union memberTypes="uelk:KeypadAccessCodeState uelk:KeypadButtonPressState uelk:KeypadTemperatureState"/>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="KeypadEvent">
+		<xsd:annotation>
+			<xsd:documentation>
+				Events relating to KeypadAction:
+				ELKAction = 4
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="101">
+				<xsd:annotation>
+					<xsd:documentation>
+						Access Code entered
+						For values, see KeypadAccessCodeState
+					</xsd:documentation>	
+				</xsd:annotation>	
+			</xsd:enumeration>
+			<xsd:enumeration value="111">
+				<xsd:annotation>
+					<xsd:documentation>
+						A Key has been acted upon.
+						For values, see KeypadButtonPressState
+					</xsd:documentation>	
+				</xsd:annotation>	
+			</xsd:enumeration>
+			<xsd:enumeration value="112">
+				<xsd:annotation>
+					<xsd:documentation>
+						A Key LED
+						For values, see KeypadLEDState
+					</xsd:documentation>	
+				</xsd:annotation>	
+			</xsd:enumeration>
+			<xsd:enumeration value="113">
+				<xsd:annotation>
+					<xsd:documentation>
+						Temperature state for a keypad temperature sensor
+						For values, see KeypadTemperatureState
+					</xsd:documentation>	
+				</xsd:annotation>	
+			</xsd:enumeration>			
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+
+	<xsd:simpleType name="OutputState">
+		<xsd:annotation>
+			<xsd:documentation>
+				Enumeration of possible values for Output State
+			</xsd:documentation>	
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">	
+			<xsd:enumeration value="0"><xsd:annotation><xsd:documentation>Off</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="1"><xsd:annotation><xsd:documentation>On</xsd:documentation></xsd:annotation></xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="OutputEventValues">
+		<xsd:union memberTypes="uelk:OutputState"/>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="OutputEvent">
+		<xsd:annotation>
+			<xsd:documentation>
+				Events relating to OutputAction:
+				ELKAction = 5
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="121">
+				<xsd:annotation>
+					<xsd:documentation>
+						Output Status
+						For values, see OutputState
+					</xsd:documentation>	
+				</xsd:annotation>	
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="SystemConnectionState">
+		<xsd:annotation>
+			<xsd:documentation>
+				Enumeration of possible values for connection (i.e. are we connected to ELK?)
+			</xsd:documentation>	
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">	
+			<xsd:enumeration value="0"><xsd:annotation><xsd:documentation>Disconnected</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="1"><xsd:annotation><xsd:documentation>Connected</xsd:documentation></xsd:annotation></xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="SystemEnableState">
+		<xsd:annotation>
+			<xsd:documentation>
+				Enumeration of possible values for enablement (i.e. is ELK Module enabled?)
+			</xsd:documentation>	
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">	
+			<xsd:enumeration value="0"><xsd:annotation><xsd:documentation>Disabled</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="1"><xsd:annotation><xsd:documentation>Enabled</xsd:documentation></xsd:annotation></xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="SystemEventValues">
+		<xsd:union memberTypes="uelk:SystemConnectionState uelk:SystemEnableState"/>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="SystemEvent">
+		<xsd:annotation>
+			<xsd:documentation>
+				Events relating to overall/general system such 
+				whether or not the module is enabled and/or connected:
+				ELKAction = 6
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="156">
+				<xsd:annotation>
+					<xsd:documentation>
+						Connection State
+						For values, see SystemConnectionState
+					</xsd:documentation>	
+				</xsd:annotation>	
+			</xsd:enumeration>
+			<xsd:enumeration value="157">
+				<xsd:annotation>
+					<xsd:documentation>
+						Enable State
+						For values, see SystemEnableState
+					</xsd:documentation>	
+				</xsd:annotation>	
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="ThermostatModeState">
+		<xsd:annotation>
+			<xsd:documentation>
+				Enumeration of possible values for thermostat mode
+			</xsd:documentation>	
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">	
+			<xsd:enumeration value="0"><xsd:annotation><xsd:documentation>Off</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="1"><xsd:annotation><xsd:documentation>Heat</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="2"><xsd:annotation><xsd:documentation>Cool</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="3"><xsd:annotation><xsd:documentation>Auto</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="4"><xsd:annotation><xsd:documentation>Emergency Heat</xsd:documentation></xsd:annotation></xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="ThermostatHoldState">
+		<xsd:annotation>
+			<xsd:documentation>
+				Enumeration of possible values for thermostat mode
+			</xsd:documentation>	
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">	
+			<xsd:enumeration value="0"><xsd:annotation><xsd:documentation>Do not hold temperature</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="1"><xsd:annotation><xsd:documentation>Hold temperature</xsd:documentation></xsd:annotation></xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="ThermostatFanState">
+		<xsd:annotation>
+			<xsd:documentation>
+				Enumeration of possible values for thermostat fan 
+			</xsd:documentation>	
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">	
+			<xsd:enumeration value="0"><xsd:annotation><xsd:documentation>Auto</xsd:documentation></xsd:annotation></xsd:enumeration>
+			<xsd:enumeration value="1"><xsd:annotation><xsd:documentation>On</xsd:documentation></xsd:annotation></xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="ThermostatTempState">
+		<xsd:annotation>
+			<xsd:documentation>
+				Temperatures are between 1-99 Fahr. This includes:
+				Temperature and Heat/Cool Setpoints.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">
+			<xsd:minInclusive value="1"/>
+      		<xsd:maxInclusive value="99"/>	
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="ThermostatHumidityState">
+		<xsd:annotation>
+			<xsd:documentation>
+				Humidty is between 1-99 %.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">
+			<xsd:minInclusive value="1"/>
+      		<xsd:maxInclusive value="99"/>	
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="ThermostatEventValues">
+		<xsd:union memberTypes="uelk:ThermostatModeState uelk:ThermostatHoldState uelk:ThermostatFanState uelk:ThermostatTempState uelk:ThermostatHumidityState"/>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="ThermostatEvent">
+		<xsd:annotation>
+			<xsd:documentation>
+				Events relating to thermostat change of state 
+				ELKAction = 7
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="191">
+				<xsd:annotation>
+					<xsd:documentation>
+						Thermostat Mode State
+						For values, see ThermostatModeState
+					</xsd:documentation>	
+				</xsd:annotation>	
+			</xsd:enumeration>
+			<xsd:enumeration value="192">
+				<xsd:annotation>
+					<xsd:documentation>
+						Thermostat Hold State
+						For values, see ThermostatHoldState
+					</xsd:documentation>	
+				</xsd:annotation>	
+			</xsd:enumeration>
+			<xsd:enumeration value="193">
+				<xsd:annotation>
+					<xsd:documentation>
+						Thermostat Fan State
+						For values, see ThermostatFanState
+					</xsd:documentation>	
+				</xsd:annotation>	
+			</xsd:enumeration>
+			<xsd:enumeration value="194">
+				<xsd:annotation>
+					<xsd:documentation>
+						Thermostat Temperature State
+						For values, see ThermostatTempState
+					</xsd:documentation>	
+				</xsd:annotation>	
+			</xsd:enumeration>	
+			<xsd:enumeration value="195">
+				<xsd:annotation>
+					<xsd:documentation>
+						Thermostat Heat Setpoint State
+						For values, see ThermostatTempState
+					</xsd:documentation>	
+				</xsd:annotation>	
+			</xsd:enumeration>	
+			<xsd:enumeration value="196">
+				<xsd:annotation>
+					<xsd:documentation>
+						Thermostat Cool Setpoint State
+						For values, see ThermostatTempState
+					</xsd:documentation>	
+				</xsd:annotation>	
+			</xsd:enumeration>	
+			<xsd:enumeration value="197">
+				<xsd:annotation>
+					<xsd:documentation>
+						Thermostat Humidity State
+						For values, see ThermostatHumidityState
+					</xsd:documentation>	
+				</xsd:annotation>	
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<!-- EventInfo Definitions -->	
+	
+	<xsd:complexType name="ELKAreaEventInfo">
+		<xsd:annotation>
+			<xsd:documentation>
+				The contents of EventInfo for ELK Area events
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="type" type="uelk:AreaEvent" use="required"/>
+		<xsd:attribute name="area" type="uelk:AreaIDType" use="required"/>
+		<xsd:attribute name="val" type="uelk:AreaEventValues" use="required"/>
+	</xsd:complexType>
+	
+	<xsd:complexType name="ELKZoneEventInfo">
+		<xsd:annotation>
+			<xsd:documentation>
+				The contents of EventInfo for ELK Zone events
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="type" type="uelk:ZoneEvent" use="required"/>
+		<xsd:attribute name="zone" type="uelk:ZoneIDType" use="required"/>
+		<xsd:attribute name="uom"  type="xsd:string" use="optional"/>
+		<xsd:attribute name="val" type="uelk:ZoneEventValues" use="required"/>
+	</xsd:complexType>
+
+	<xsd:complexType name="ELKKeypadEventInfo">
+		<xsd:annotation>
+			<xsd:documentation>
+				The contents of EventInfo for ELK Keypad events
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="type" type="uelk:KeypadEvent" use="required"/>
+		<xsd:attribute name="key" type="uelk:FunctionKeyType" use="optional"/>
+		<xsd:attribute name="keypad"  type="uelk:KeypadLEDState" use="required"/>
+		<xsd:attribute name="val" type="uelk:KeypadEventValues" use="required"/>
+	</xsd:complexType>	
+	
+	<xsd:complexType name="ELKOutputEventInfo">
+		<xsd:annotation>
+			<xsd:documentation>
+				The contents of EventInfo for Output events
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="type" type="uelk:OutputEvent" use="required"/>
+		<xsd:attribute name="output" type="uelk:OutputIDType" use="required"/>
+		<xsd:attribute name="val" type="uelk:OutputEventValues" use="required"/>
+	</xsd:complexType>	
+	
+	<xsd:complexType name="ELKSystemEventInfo">
+		<xsd:annotation>
+			<xsd:documentation>
+				The contents of EventInfo for System events
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="type" type="uelk:SystemEvent" use="required"/>
+		<xsd:attribute name="val" type="uelk:SystemEventValues" use="required"/>
+	</xsd:complexType>	
+	
+	<xsd:complexType name="ELKThermostatEventInfo">
+		<xsd:annotation>
+			<xsd:documentation>
+				The contents of EventInfo for Thermostat events
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="tstat" type="uelk:ThermostatIDType" use="required"/>
+		<xsd:attribute name="type" type="uelk:ThermostatEvent" use="required"/>
+		<xsd:attribute name="val" type="uelk:ThermostatEventValues" use="required"/>
+	</xsd:complexType>		
+	
+	<xsd:complexType name="ELKEventInfo">
+		<xsd:annotation>
+			<xsd:documentation>
+				EventInfo contents for each type of event:
+				AreaEvent
+				ZoneEvent
+				KeypadEvent
+				OutputEvent
+				SystemEvent
+				ThermostatEvent
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:choice>
+				<xsd:element name="ae" type="uelk:ELKAreaEventInfo"  minOccurs="1" maxOccurs="1">
+					<xsd:annotation>
+						<xsd:documentation>
+							Area Event
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="ze" type="uelk:ELKZoneEventInfo"  minOccurs="1" maxOccurs="1">
+					<xsd:annotation>
+						<xsd:documentation>
+							Zone Event
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="ke" type="uelk:ELKKeypadEventInfo"  minOccurs="1" maxOccurs="1">
+					<xsd:annotation>
+						<xsd:documentation>
+							Keypad Event
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="oe" type="uelk:ELKOutputEventInfo"  minOccurs="1" maxOccurs="1">
+					<xsd:annotation>
+						<xsd:documentation>
+							Output Event
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="se" type="uelk:ELKSystemEventInfo"  minOccurs="1" maxOccurs="1">
+					<xsd:annotation>
+						<xsd:documentation>
+							System Event
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="te" type="uelk:ELKThermostatEventInfo"  minOccurs="1" maxOccurs="1">
+					<xsd:annotation>
+						<xsd:documentation>
+							Thermostat Event
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>				
+			</xsd:choice>
+		</xsd:sequence>
+	</xsd:complexType>	
+
+	
+	<xsd:complexType name="ELKAllStatus">
+		<xsd:annotation>
+			<xsd:documentation>
+				The complete status for the whole ELK system/configuration
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:choice>
+				<xsd:element name="ae" type="uelk:ELKAreaEventInfo"  minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+							Area Event
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="ze" type="uelk:ELKZoneEventInfo"  minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+							Zone Event
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="ke" type="uelk:ELKKeypadEventInfo"  minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+							Keypad Event
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="oe" type="uelk:ELKOutputEventInfo"  minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+							Output Event
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="se" type="uelk:ELKSystemEventInfo"  minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+							System Event
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="te" type="uelk:ELKThermostatEventInfo"  minOccurs="9" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>
+							Thermostat Event
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>				
+			</xsd:choice>
+		</xsd:sequence>
+	</xsd:complexType>	
+	
+	<!-- Responses that are common between REST/Web Services -->
+	<xsd:complexType name="SystemResponseType">
+		<xsd:annotation>
+			<xsd:documentation>
+				Returned in response to System status queries
+		 	</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="se" type="uelk:ELKSystemEventInfo" minOccurs="1" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>
+		 				System Event Info
+		 			</xsd:documentation>
+				</xsd:annotation>				
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="AreaResponseType">
+		<xsd:annotation>
+			<xsd:documentation>
+				Returned in response to Area status queries
+		 	</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="ae" type="uelk:ELKAreaEventInfo" minOccurs="1" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>
+		 				Area Event Info
+		 			</xsd:documentation>
+				</xsd:annotation>				
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="ZoneResponseType">
+		<xsd:annotation>
+			<xsd:documentation>
+				Returned in response to Zone status queries
+		 	</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="ze" type="uelk:ELKZoneEventInfo" minOccurs="1" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>
+		 				Zone Event Info
+		 			</xsd:documentation>
+				</xsd:annotation>				
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>	
+	
+	<xsd:complexType name="KeypadResponseType">
+		<xsd:annotation>
+			<xsd:documentation>
+				Returned in response to Keypad status queries
+		 	</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="ke" type="uelk:ELKKeypadEventInfo" minOccurs="1" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>
+		 				Keypad Event Info
+		 			</xsd:documentation>
+				</xsd:annotation>				
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>	
+	
+	<xsd:complexType name="OutputResponseType">
+		<xsd:annotation>
+			<xsd:documentation>
+				Returned in response to Output status queries
+		 	</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="oe" type="uelk:ELKOutputEventInfo" minOccurs="1" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>
+		 				Output Event Info
+		 			</xsd:documentation>
+				</xsd:annotation>				
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>	
+	
+	<xsd:complexType name="ThermostatResponseType">
+		<xsd:annotation>
+			<xsd:documentation>
+				Returned in response to Thermostat status queries
+		 	</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="te" type="uelk:ELKThermostatEventInfo" minOccurs="1" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>
+		 				Thermostat Event Info
+		 			</xsd:documentation>
+				</xsd:annotation>				
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>		
+	
+</xsd:schema>

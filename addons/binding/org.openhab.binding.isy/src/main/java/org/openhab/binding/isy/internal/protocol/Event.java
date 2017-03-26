@@ -20,7 +20,7 @@ public class Event {
     private String node;
 
     @XStreamAlias("eventInfo")
-    private String eventInfo;
+    private EventInfo eventInfo;
 
     public Integer getSequenceNumber() {
         return sequenceNumber;
@@ -54,11 +54,11 @@ public class Event {
         this.node = node;
     }
 
-    public String getEventInfo() {
+    public EventInfo getEventInfo() {
         return eventInfo;
     }
 
-    public void setEventInfo(String eventInfo) {
+    public void setEventInfo(EventInfo eventInfo) {
         this.eventInfo = eventInfo;
     }
 

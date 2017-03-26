@@ -27,21 +27,27 @@ public class ISYBindingConstants {
     public final static ThingTypeUID THING_TYPE_OUTLET = new ThingTypeUID(BINDING_ID, "outlet");
     public final static ThingTypeUID THING_TYPE_MOTION_SENSOR = new ThingTypeUID(BINDING_ID, "motionSensor");
     public final static ThingTypeUID THING_TYPE_CONTACT_SENSOR = new ThingTypeUID(BINDING_ID, "contactSensor");
+    public final static ThingTypeUID THING_TYPE_ELK_ZONE = new ThingTypeUID(BINDING_ID, "elkZone");
+    public final static ThingTypeUID THING_TYPE_ZWAVE_SENSOR = new ThingTypeUID(BINDING_ID, "zwaveSensor");
 
     // List of all Channel ids
-    public final static String CHANNEL_STATE = "state";
-    public final static String CHANNEL_STATE_2 = "state2";
+    public final static String CHANNEL_SWITCH = "switch";
     public final static String CHANNEL_BRIGHTNESS = "brightness";
-    public final static String CHANNEL_MOTION = "motion";
-    public final static String CHANNEL_DUSK_DAWN = "duskDawn";
-    public final static String CHANNEL_BATTERY = "battery";
-    public final static String CHANNEL_CONTROL = "control";
-    public final static String CHANNEL_SCENE = "scene";
+    public final static String CHANNEL_CONTACT = "contact";
     public final static String CHANNEL_STATE_VARIABLE = "stateVariable";
+    public final static String CHANNEL_ELK_ZONE_STATUS = "elkZoneStatus";
+    public final static String CHANNEL_ELK_ZONE_VOLTAGE = "elkZoneVoltage";
+    public final static String CHANNEL_SCENE = "scene";
 
-    public final static ChannelTypeUID CHANNEL_TYPE_SCENE = new ChannelTypeUID(BINDING_ID, CHANNEL_SCENE);
+    public final static ChannelTypeUID CHANNEL_TYPE_SWITCH = new ChannelTypeUID(BINDING_ID, CHANNEL_SWITCH);
+    public final static ChannelTypeUID CHANNEL_TYPE_BRIGHTNESS = new ChannelTypeUID(BINDING_ID, CHANNEL_BRIGHTNESS);
+    public final static ChannelTypeUID CHANNEL_TYPE_CONTACT = new ChannelTypeUID(BINDING_ID, CHANNEL_CONTACT);
     public final static ChannelTypeUID CHANNEL_TYPE_STATE_VARIABLE = new ChannelTypeUID(BINDING_ID,
             CHANNEL_STATE_VARIABLE);
+    public final static ChannelTypeUID CHANNEL_TYPE_ELK_ZONE_STATUS = new ChannelTypeUID(BINDING_ID,
+            CHANNEL_ELK_ZONE_STATUS);
+    static ChannelTypeUID CHANNEL_TYPE_ELK_ZONE_VOLTAGE = new ChannelTypeUID(BINDING_ID, CHANNEL_ELK_ZONE_VOLTAGE);
+    public final static ChannelTypeUID CHANNEL_TYPE_SCENE = new ChannelTypeUID(BINDING_ID, CHANNEL_SCENE);
 
     // Upnp Discovery
     public static final String ISY = "ISY";
@@ -51,6 +57,7 @@ public class ISYBindingConstants {
     public static final String PARAMETER_USERNAME = "username";
     public static final String PARAMETER_PASSWORD = "password";
     public static final String PARAMETER_BASE_URL = "baseUrl";
+    public static final String PARAMETER_REFRESH = "refresh";
 
     public static String addresstoId(String address) {
         int lastGap = address.lastIndexOf(" ");
